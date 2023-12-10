@@ -24,6 +24,19 @@ duplicated according to their grouped periods (see \code{\link[=group_periods]{g
 FALSE all rows are duplicated according to their single
 periods (see \code{\link[=ungroup_periods]{ungroup_periods()}}).}
 }
+\value{
+A data.frame, with a row for each period in which each row from the
+previous data would fall (see description).
+}
 \description{
 Duplicate each Row for each Period in the Range from start to end
+}
+\examples{
+data("BuildingsMilet")
+data("exChronglerConc")
+
+duplicate_by(BuildingsMilet, exChronglerConc,
+             start = "period.start", end = "period.end",
+             by_group = FALSE)
+
 }
