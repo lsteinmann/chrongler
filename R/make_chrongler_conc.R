@@ -35,6 +35,8 @@
 #' @return A list.
 #' @export
 #'
+#' @importFrom utils read.csv
+#'
 #' @examples
 #' \dontrun{
 #' file <- system.file(package = "chrongler",
@@ -83,7 +85,7 @@ make_chrongler_conc <- function(file,
   if(num_min == FALSE | num_max == FALSE) {
     msg <- c(ifelse(num_min, NA, "dating.min"), ifelse(num_max, NA, "dating.max"))
     msg <- paste0("Non-numeric values in: ",
-                  paste(na.omit(msg), collapse = " and "),
+                  paste(msg[!is.na(msg)], collapse = " and "),
                   ".")
     warning(msg)
     data[, cols$dating.min] <- as.numeric(data[, cols$dating.min])
