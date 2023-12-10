@@ -2,14 +2,19 @@
 % Please edit documentation in R/utilities.R
 \name{colnames_to_index}
 \alias{colnames_to_index}
-\title{Title}
+\title{Get the index for the colname}
 \usage{
 colnames_to_index(colnames, columns)
 }
 \arguments{
-\item{columns}{}
+\item{colnames}{Vector of column names}
+
+\item{columns}{The columns for which to return the indices}
+}
+\value{
+integer
 }
 \description{
-Title
+Get the index for the colname
 }
 \keyword{internal}

@@ -5,7 +5,7 @@
 \alias{exChronglerConc}
 \title{Example Concordance to be used with BuildingsMilet-Dataset}
 \format{
-An object of class \code{list} (inherits from \code{chrongler.conc}) of length 5.
+An object of class \code{list} (inherits from \code{chrongler.conc}) of length 6.
 }
 \source{
 \emph{L. Steinmann, S. Huy, F. Sliwka, D. Göçmen, N. Lordoğlu,

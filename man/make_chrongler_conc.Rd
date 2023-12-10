@@ -6,8 +6,7 @@
 \usage{
 make_chrongler_conc(
   file,
-  cols = list(group = NA, values = NA, dating.min = NA, dating.max = NA, color = NA),
-  ...
+  cols = list(group = NA, values = NA, dating.min = NA, dating.max = NA, color = NA)
 )
 }
 \arguments{
@@ -19,7 +18,12 @@ make_chrongler_conc(
 A list.
 }
 \description{
-Produce a concordance object that can be used with \code{chrongler} functions
+The csv-file or data.frame you supply should contain containing two columns: the first column
+should list all period-"groups", e.g. 'Roman Imperial Period', and the
+second one should list all the corresponding periods, e.g.
+'Early Imperial', ..., 'Late Imperial' and so forth. The grouping
+data.frame should be in chronological order, because the results will
+be returned as an ordered factor according to this order.
 }
 \details{
 If the column names of your provided csv file or data.frame already

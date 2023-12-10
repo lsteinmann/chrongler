@@ -1,7 +1,12 @@
 #' Produce a concordance object that can be used with `chrongler` functions
 #'
 #' @description
-#'
+#' The csv-file or data.frame you supply should contain containing two columns: the first column
+#'    should list all period-"groups", e.g. 'Roman Imperial Period', and the
+#'    second one should list all the corresponding periods, e.g.
+#'    'Early Imperial', ..., 'Late Imperial' and so forth. The grouping
+#'    data.frame should be in chronological order, because the results will
+#'    be returned as an ordered factor according to this order.
 #'
 #'
 #' @param file chr / data.frame / matrix
@@ -112,7 +117,6 @@ make_chrongler_conc <- function(file,
     x <- factor(x, levels = ordered_periods, ordered = TRUE)
   })
 
-  warn <- FALSE
   dating <- lapply(values, function (x) {
     ind <- which(data[, cols$values] == x)
 
@@ -125,12 +129,28 @@ make_chrongler_conc <- function(file,
   if (length(dating) > 0) {
     names(dating) <- values
   }
-  if (warn == TRUE) {
 
-  }
   ordered_groups <- factor(groups, levels = groups, ordered = TRUE)
 
-  conc <- list(grouped = grouped,
+
+  all <- data[, cols$values]
+  all <- lapply(all, function (x) {
+    ind <- which(data[, cols$values] == x)
+    list(name = x,
+         group = data[ind, cols$group],
+         dating = list(
+           from = data[ind, cols$dating.min],
+           to = data[ind, cols$dating.max]
+         ),
+         color = data[ind, cols$color]
+    )
+  })
+  if (length(all) > 0) {
+    names(all) <- data[, cols$values]
+  }
+
+  conc <- list(all = all,
+               grouped = grouped,
                group.order = ordered_groups,
                period.order = ordered_periods,
                dating = dating,
