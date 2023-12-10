@@ -44,13 +44,13 @@ derive_dating <- function(data, conc,
 
   stopifnot(inherits(conc, "chrongler.conc"))
 
-  start <- chrongler:::colnames_to_index(colnames(data), start)
-  end <- chrongler:::colnames_to_index(colnames(data), end)
+  start <- colnames_to_index(colnames(data), start)
+  end <- colnames_to_index(colnames(data), end)
 
-  dating.min <- try(chrongler:::colnames_to_index(colnames(data),
+  dating.min <- try(colnames_to_index(colnames(data),
                                                   dating.min),
                     silent = TRUE)
-  dating.max <- try(chrongler:::colnames_to_index(colnames(data),
+  dating.max <- try(colnames_to_index(colnames(data),
                                                   dating.max),
                     silent = TRUE)
 
@@ -60,11 +60,11 @@ derive_dating <- function(data, conc,
 
   if (inherits(dating.min, "try-error")) {
     data$dating.min <- NA
-    dating.min <- chrongler:::colnames_to_index(colnames(data), "dating.max")
+    dating.min <- colnames_to_index(colnames(data), "dating.max")
   }
   if (inherits(dating.max, "try-error")) {
     data[, dating.max] <- NA
-    dating.max <- chrongler:::colnames_to_index(colnames(data), "dating.max")
+    dating.max <- colnames_to_index(colnames(data), "dating.max")
   }
 
   not_found <- unique(

@@ -35,8 +35,8 @@ group_periods <- function(data, conc, start, end) {
 
   stopifnot(inherits(conc, "chrongler.conc"))
 
-  start <- chrongler:::colnames_to_index(colnames(data), start)
-  end <- chrongler:::colnames_to_index(colnames(data), end)
+  start <- colnames_to_index(colnames(data), start)
+  end <- colnames_to_index(colnames(data), end)
 
   res_start <- as.character(data[, start])
   res_start <- vapply(res_start, FUN.VALUE = "character", FUN = function(x) {

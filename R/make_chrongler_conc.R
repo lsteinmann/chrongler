@@ -64,7 +64,7 @@ make_chrongler_conc <- function(file,
     if (is.na(cols[[i]])) {
       cols[[i]] <- grep(names(cols[i]), colnames)
     } else {
-      cols[[i]] <- chrongler:::colnames_to_index(colnames, cols[[i]])
+      cols[[i]] <- colnames_to_index(colnames, cols[[i]])
     }
   }
 

@@ -1,5 +1,8 @@
 #' Duplicate each Row for each Period in the Range from start to end
 #'
+#'
+#'
+#'
 #' @inheritParams group_periods
 #' @param by_group *TRUE/FALSE*. Default is TRUE. If TRUE all rows are
 #' duplicated according to their grouped periods (see [group_periods()]). If
@@ -15,8 +18,8 @@ duplicate_by <- function(data, conc, start, end, by_group = TRUE) {
 
   stopifnot(inherits(conc, "chrongler.conc"))
 
-  start <- chrongler:::colnames_to_index(colnames(data), start)
-  end <- chrongler:::colnames_to_index(colnames(data), end)
+  start <- colnames_to_index(colnames(data), start)
+  end <- colnames_to_index(colnames(data), end)
 
   if (length(start) == 0 | length(end) == 0) {
     stop("Cannot identify start and end columns.")

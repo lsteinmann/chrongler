@@ -29,8 +29,8 @@ ungroup_periods <- function(data, conc, start, end) {
 
   stopifnot(inherits(conc, "chrongler.conc"))
 
-  start <- chrongler:::colnames_to_index(colnames(data), start)
-  end <- chrongler:::colnames_to_index(colnames(data), end)
+  start <- colnames_to_index(colnames(data), start)
+  end <- colnames_to_index(colnames(data), end)
 
   res_start <- as.character(data[, start])
   matches <- match(res_start, conc$group.order)
