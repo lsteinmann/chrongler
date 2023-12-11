@@ -112,7 +112,7 @@ derive_dating <- function(data, conc,
   data$dating.source[c(min_na, max_na)] <- ifelse(
     is.na(data$dating.source[c(min_na, max_na)]),
     "Derived from period",
-    paste(data$dating.source[c(min_na, max_na)], "Partially derived from period")
+    paste(data$dating.source[c(min_na, max_na)], " - Partially derived from period")
     )
 
   return(data)
