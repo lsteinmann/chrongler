@@ -22,7 +22,9 @@
 #'  column already exists, it will be overwritten.
 #' @inheritParams group_periods
 #'
-#' @seealso [make_chrongler_conc()]
+#' @seealso
+#'  * [make_chrongler_conc()]
+#'  * [derive_period()]
 #'
 #' @return A data.frame, with absolute values in the `dating.min` and
 #' `dating.max` columns and a comment in `dating.source` (see description).

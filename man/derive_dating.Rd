@@ -56,5 +56,8 @@ conc <- make_chrongler_conc(filename)
 derive_dating(BuildingsMilet, conc, start = "period.start", end = "period.end")
 }
 \seealso{
-\code{\link[=make_chrongler_conc]{make_chrongler_conc()}}
+\itemize{
+\item \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}
+\item \code{\link[=derive_period]{derive_period()}}
+}
 }
