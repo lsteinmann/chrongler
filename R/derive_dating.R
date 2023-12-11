@@ -48,10 +48,10 @@ derive_dating <- function(data, conc,
   end <- colnames_to_index(colnames(data), end)
 
   dating.min <- try(colnames_to_index(colnames(data),
-                                                  dating.min),
+                                      dating.min),
                     silent = TRUE)
   dating.max <- try(colnames_to_index(colnames(data),
-                                                  dating.max),
+                                      dating.max),
                     silent = TRUE)
 
   if (length(start) == 0 | length(end) == 0) {
@@ -60,10 +60,10 @@ derive_dating <- function(data, conc,
 
   if (inherits(dating.min, "try-error")) {
     data$dating.min <- NA
-    dating.min <- colnames_to_index(colnames(data), "dating.max")
+    dating.min <- colnames_to_index(colnames(data), "dating.min")
   }
   if (inherits(dating.max, "try-error")) {
-    data[, dating.max] <- NA
+    data$dating.max <- NA
     dating.max <- colnames_to_index(colnames(data), "dating.max")
   }
 
