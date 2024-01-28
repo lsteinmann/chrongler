@@ -15,7 +15,8 @@ Description: This package provides convenience functions that are helpful
     of analysis or further processing.
 License: GPL (>= 3)
 Depends: 
-    R (>= 3.3)
+    R (>= 3.3),
+    jsonlite
 Suggests: 
     covr,
     dplyr,

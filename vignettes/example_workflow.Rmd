@@ -34,7 +34,18 @@ library(chrongler)
 
 chrongler relies on a concordance object supplied by the user. The concordance can be brought into the format needed by chrongler using the `make_chrongler_conc()`-function. While it is easier to create the data in some spreadsheet software and import a csv-file, I will demonstrate the data structure here by putting it together in R. 
 
-Let's use the *[Roman Republic](https://chronontology.dainst.org/period/RX2Rv7kcbLGk)* and the *[Roman Empire]((https://chronontology.dainst.org/period/bCTpXj4LVC2n))* as an easy example. We will get the dates and values from [chronOntology](https://chronontology.dainst.org/): *Roman Republic* contains three basic periods: "Early Roman Republic", "High Roman Republic", "Late Roman Republic". *Roman Empire* also contains three periods: "Early Roman Empire", "High Roman Empire" and "Late Roman Empire"). Thus, our data.frame (or spreadsheet) would need at least six rows. Since it is needed for some optional functionality, I will also treat the groups themselves (*Roman Republic* and *Roman Empire*) as another period:
+## iDAI.chronOntology
+We will get the dates and values for our examples manually from [iDAI.chronOntology](https://chronontology.dainst.org/). You can download a the data from one chronOntology-period directly like this, the `id` being the last part of the URL: 
+
+```{r eval = FALSE}
+from_chronontology(id = "RX2Rv7kcbLGk")
+```
+
+This will give you a nested list with the data you can see on the page, including relations to other periods. It would be possible to automatically import a group of periods this way, but I have not implemented it, because the data can be rather heterogeneous. In any case, we will proceed to enter everything manually in this vignette.
+
+## Creating the Example Data
+
+Let's use the *[Roman Republic](https://chronontology.dainst.org/period/RX2Rv7kcbLGk)* and the *[Roman Empire]((https://chronontology.dainst.org/period/bCTpXj4LVC2n))* as an easy example.  *Roman Republic* contains three basic periods: "Early Roman Republic", "High Roman Republic", "Late Roman Republic". *Roman Empire* also contains three periods: "Early Roman Empire", "High Roman Empire" and "Late Roman Empire"). Thus, our data.frame (or spreadsheet) would need at least six rows. Since it is needed for some optional functionality, I will also treat the groups themselves (*Roman Republic* and *Roman Empire*) as another period:
 
 ```{r}
 conc_df <- data.frame(values = c("Roman Republic", "Early Roman Republic", "High Roman Republic", "Late Roman Republic", "Roman Empire", "Early Roman Empire", "High Roman Empire", "Late Roman Empire"))
@@ -88,6 +99,8 @@ The resulting data.frame should look this:
 ```{r echo = FALSE}
 knitr::kable(conc_df)
 ```
+
+## The Concordance
 
 Obviously, it is much more convenient for you to put all this information together in some spreadsheet software and then import it here, rather than producing the object in this way in R. I simply wanted to comment in detail on the values expected by chrongler and the logic behind this. The actual function is as simple as it gets, though depending on your table you can supply a list of column names or indices to the 'cols' argument - if for some reason they are different than the ones used in the above example. See the documentation for info on that (`?make_chrongler_conc`). Order of the columns is not important.
 
