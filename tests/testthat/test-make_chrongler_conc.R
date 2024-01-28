@@ -1,7 +1,3 @@
-
-
-
-
 test_that("no failure on file name", {
   filename <- system.file(package = "chrongler",
                           "extdata/2023_periods_grouping_example.csv")
@@ -38,15 +34,13 @@ test_that("failure on no file or no csv", {
   expect_error(make_chrongler_conc(file), "file")
 })
 
-
-test_that("warning when columns dont exist", {
+test_that("error when columns dont exist", {
   test <- data.frame("grs" = c("A", "A", "B"),
                      "prs" = c("A", "donc", "bla"),
                      "min" = c(1, 2, 3),
                      "max" = c(2, 3, 4),
                      "colr" = c("green", "red", "yellow"))
-  warnings <- capture_warnings(make_chrongler_conc(test))
-  expect_true(all(grepl("Columns|numeric", warnings)))
+  expect_error(make_chrongler_conc(test), "not found")
 })
 
 
@@ -74,12 +68,11 @@ test_that("works with indices", {
   expect_true(inherits(make_chrongler_conc(test, cols = colnames), "chrongler.conc"))
 })
 
-test_that("color column missing", {
+test_that("values column missing", {
   test <- data.frame("groups" = c("A", "A", "A", "B"),
-                     "values" = c("A", "donc", "esel", "bla"),
                      "dating.min" = c(1, 2, 3, 4),
                      "dating.max" = c(2, 3, 4, 5))
-  expect_warning(make_chrongler_conc(test), "color")
+  expect_error(make_chrongler_conc(test), "values")
 })
 
 
@@ -87,16 +80,19 @@ test_that("group column missing", {
   test <- data.frame("values" = c("A", "donc", "esel", "bla"),
                      "dating.min" = c(1, 2, 3, 4),
                      "dating.max" = c(2, 3, 4, 5))
-  expect_warning(make_chrongler_conc(test), "group")
+  expect_error(make_chrongler_conc(test), "group")
 })
-
 
 test_that("dating not numeric", {
   test <- data.frame("groups" = c("A", "A", "A", "B"),
                      "values" = c("A", "donc", "esel", "bla"),
-                     "dating.min" = c("2", "2", "3", "5"),
+                     "dating.min" = c("2", "2", "hello", "5"),
                      "dating.max" = c("2", "3", "4", "5"),
                      "color" = c("green", "red", "yellow", "brown"))
-  expect_warning(make_chrongler_conc(test), "numeric")
+  warnings <- capture_warnings(make_chrongler_conc(test))
+  expect_true(any(grepl("numeric", warnings)))
+  expect_true(any(grepl("coercion", warnings)))
 })
+
+
 

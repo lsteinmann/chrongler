@@ -39,14 +39,20 @@
 #'
 #' @examples
 #' \dontrun{
-#' file <- system.file(package = "chrongler",
+#' filename <- system.file(package = "chrongler",
 #'                     "extdata/2023_periods_grouping_example.csv")
-#' make_chrongler_conc(file)
+#' conc <- make_chrongler_conc(filename)
+#' str(conc)
+#'
+#' filename <- system.file(package = "chrongler", "extdata/2023_periods_grouping_example.csv")
+#' table <- read.csv(filename)
+#' conc <- make_chrongler_conc(table)
+#' str(conc)
 #' }
 make_chrongler_conc <- function(file,
                                 cols = list(group = NA, values = NA,
                                             dating.min = NA, dating.max = NA,
-                                            color = NA)) {
+                                            color = NA, source = NA)) {
 
   if (is.data.frame(file) | is.matrix(file)) {
     data <- as.data.frame(file)
@@ -60,28 +66,25 @@ make_chrongler_conc <- function(file,
     stop("`chrongler_conc()` cannot handle the value supplied as 'file'.")
   }
 
-  colnames <- colnames(data)
-
   for (i in seq_along(cols)) {
     if (is.na(cols[[i]])) {
-      cols[[i]] <- grep(names(cols[i]), colnames)
-    } else {
-      cols[[i]] <- colnames_to_index(colnames, cols[[i]])
+      cols[[i]] <- grep(names(cols[i]), colnames(data))
+    }
+    if (is.character(cols[[i]])) {
+      cols[[i]] <- colnames_to_index(colnames(data), cols[[i]])
     }
   }
-
-  no_col <- unlist(lapply(cols, length))
-  if (any(no_col == 0) | any(is.na(cols))) {
-    ind <- which(no_col == 0)
-    ind <- c(ind, which(is.na(cols)))
-
-    warning(paste0("Columns: ", paste(names(cols[ind]), collapse = ", "), " not found."))
+  missing <- unlist(lapply(cols, function(x) length(x) == 0))
+  missing <- names(missing)[missing]
+  mandatory <- c("values", "group", "dating.min", "dating.max")
+  if (any(missing %in% mandatory)) {
+    stop(paste0("Mandatory columns: ",
+                paste(match.arg(missing, mandatory, several.ok = TRUE),
+                      collapse = ", "), " not found."))
   }
-
 
   num_min <- all(is.numeric(data[, cols$dating.min]))
   num_max <- all(is.numeric(data[, cols$dating.max]))
-  num_max <- TRUE
   if(num_min == FALSE | num_max == FALSE) {
     msg <- c(ifelse(num_min, NA, "dating.min"), ifelse(num_max, NA, "dating.max"))
     msg <- paste0("Non-numeric values in: ",
@@ -98,6 +101,15 @@ make_chrongler_conc <- function(file,
   colors <- data[, cols$color]
   if (length(colors) > 0) {
     names(colors) <- data[, cols$values]
+  } else {
+    colors <- rep(NA, length(data))
+  }
+
+  sources <- data[, cols$source]
+  if (length(sources) > 0) {
+    names(sources) <- data[, cols$values]
+  } else {
+    sources <- rep(NA, length(data))
   }
 
   grouped <- lapply(groups, function (per_group) {
@@ -144,7 +156,8 @@ make_chrongler_conc <- function(file,
            from = data[ind, cols$dating.min],
            to = data[ind, cols$dating.max]
          ),
-         color = data[ind, cols$color]
+         color = data[ind, cols$color],
+         source = data[ind, cols$source]
     )
   })
   if (length(all) > 0) {
@@ -156,7 +169,8 @@ make_chrongler_conc <- function(file,
                group.order = ordered_groups,
                period.order = ordered_periods,
                dating = dating,
-               color = colors)
+               color = colors,
+               source = sources)
 
   class(conc) <- c("list", "chrongler.conc")
 
