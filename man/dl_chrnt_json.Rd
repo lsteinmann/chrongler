@@ -2,7 +2,7 @@
 % Please edit documentation in R/from_chronontology.R
 \name{dl_chrnt_json}
 \alias{dl_chrnt_json}
-\title{Download List from iDAI.chronOntology}
+\title{Download List from iDAI.chronontology}
 \source{
 See docs at https://github.com/dainst/chronontology-backend/blob/master/docs/rest-api-reference.md
 }
@@ -18,6 +18,6 @@ downloaded (part of the URL after
 A nested list formatted from JSON.
 }
 \description{
-Download List from iDAI.chronOntology
+Download List from iDAI.chronontology
 }
 \keyword{internal}

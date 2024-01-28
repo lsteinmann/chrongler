@@ -2,7 +2,7 @@
 % Please edit documentation in R/from_chronontology.R
 \name{from_chronontology}
 \alias{from_chronontology}
-\title{Get Data for One Period from iDAI.chronOntology}
+\title{Get Data for One Period from iDAI.chronontology}
 \source{
 data: \href{https://chronontology.dainst.org/}{iDAI.chronontology}
 }
@@ -16,10 +16,10 @@ downloaded (part of the URL after
 }
 \value{
 A nested list with the data for one period downloaded
-from iDAI.chronOntology.
+from iDAI.chronontology.
 }
 \description{
-Get Data for One Period from iDAI.chronOntology
+Get Data for One Period from iDAI.chronontology
 }
 \examples{
 geometric <- from_chronontology("AqUgeWHp0xIl")

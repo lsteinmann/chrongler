@@ -1,4 +1,4 @@
-#' Download List from iDAI.chronOntology
+#' Download List from iDAI.chronontology
 #'
 #' @param id (chr) The chronOntology-ID of the period that should be
 #'    downloaded (part of the URL after
@@ -25,14 +25,14 @@ dl_chrnt_json <- function(id = "") {
   }
 }
 
-#' Get Data for One Period from iDAI.chronOntology
+#' Get Data for One Period from iDAI.chronontology
 #'
 #' @inheritParams dl_chrnt_json
 #'
 #' @source data: [iDAI.chronontology](https://chronontology.dainst.org/)
 #'
 #' @return A nested list with the data for one period downloaded
-#'    from iDAI.chronOntology.
+#'    from iDAI.chronontology.
 #'
 #'
 #' @export

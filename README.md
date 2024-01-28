@@ -20,7 +20,7 @@ Using chrongler (and a concordance of periods and their grouping and absolute da
 * duplicate rows of objects according to their periods or groups (`duplicate_by()`)
 * add absolute dating based on the periods an object is dated to (`derive_dating()`)
 * add the period an object would be dated to based on absolute dating values (`derive_period()`)
-* download the data for one period from [iDAI.chronOntology](https://chronontology.dainst.org/) (`from_chronontology()`, it's a bit of a work in progress...)
+* download the data for one period from [iDAI.chronontology](https://chronontology.dainst.org/) (`from_chronontology()`, it's a bit of a work in progress...)
 
 The inaccurately named "example_workflow"-vignette explains the functions and especially setting up the concordance in detail, see:
 ``` r

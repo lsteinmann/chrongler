@@ -34,8 +34,8 @@ library(chrongler)
 
 chrongler relies on a concordance object supplied by the user. The concordance can be brought into the format needed by chrongler using the `make_chrongler_conc()`-function. While it is easier to create the data in some spreadsheet software and import a csv-file, I will demonstrate the data structure here by putting it together in R. 
 
-## iDAI.chronOntology
-We will get the dates and values for our examples manually from [iDAI.chronOntology](https://chronontology.dainst.org/). You can download a the data from one chronOntology-period directly like this, the `id` being the last part of the URL: 
+## iDAI.chronontology
+We will get the dates and values for our examples manually from [iDAI.chronontology](https://chronontology.dainst.org/). You can download a the data from one chronOntology-period directly like this, the `id` being the last part of the URL: 
 
 ```{r eval = FALSE}
 from_chronontology(id = "RX2Rv7kcbLGk")
