@@ -36,9 +36,13 @@ duplicate_by <- function(data, conc, start, end, by_group = TRUE) {
   if (by_group == TRUE) {
     data <- group_periods(data, conc, start, end)
     order <- conc$group.order
+    start <- colnames_to_index(colnames(data), "start.grpd")
+    end <- colnames_to_index(colnames(data), "end.grpd")
   } else if (by_group == FALSE) {
     data <- ungroup_periods(data, conc, start, end)
     order <- conc$period.order
+    start <- colnames_to_index(colnames(data), "start.ungr")
+    end <- colnames_to_index(colnames(data), "end.ungr")
   }
 
   data[, start] <- ordered(data[, start], levels = order)
