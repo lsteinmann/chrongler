@@ -1,0 +1,186 @@
+---
+title: "Example workflow with chrongler"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{example_workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+chrongler is an R-package that contains functions meant to re-format archaeological or historical "periods" stored as categorial variables. Using a concordance provided by the user, the periods can be replaced with absolute values taken from that concordance. This vignettes comments and illustrate the functions chrongler provides.
+
+# Installing chrongler
+
+chrongler is not on CRAN. You can install the latest version from the [GitHub-repository](https://github.com/lsteinmann/chrongler) using: 
+
+```{r installation, eval = FALSE}
+remotes::install_github("lsteinmann/chrongler", build_vignettes = TRUE)
+```
+
+And then load the package:
+
+```{r setup}
+library(chrongler)
+```
+
+# Preparing the Concordance
+
+chrongler relies on a concordance object supplied by the user. The concordance can be brought into the format needed by chrongler using the `make_chrongler_conc()`-function. While it is easier to create the data in some spreadsheet software and import a csv-file, I will demonstrate the data structure here by putting it together in R. 
+
+Let's use the *[Roman Republic](https://chronontology.dainst.org/period/RX2Rv7kcbLGk)* and the *[Roman Empire]((https://chronontology.dainst.org/period/bCTpXj4LVC2n))* as an easy example. We will get the dates and values from [chronOntology](https://chronontology.dainst.org/): *Roman Republic* contains three basic periods: "Early Roman Republic", "High Roman Republic", "Late Roman Republic". *Roman Empire* also contains three periods: "Early Roman Empire", "High Roman Empire" and "Late Roman Empire"). Thus, our data.frame (or spreadsheet) would need at least six rows. Since it is needed for some optional functionality, I will also treat the groups themselves (*Roman Republic* and *Roman Empire*) as another period:
+
+```{r}
+conc_df <- data.frame(values = c("Roman Republic", "Early Roman Republic", "High Roman Republic", "Late Roman Republic", "Roman Empire", "Early Roman Empire", "High Roman Empire", "Late Roman Empire"))
+```
+
+As established above, the first four periods belong to the group "Roman Republic", the following four to the "Roman Empire". We add this info as another column in our data.frame: 
+
+```{r}
+conc_df$group <- c(rep("Roman Republic", 4), rep("Roman Empire", 4))
+
+conc_df
+```
+Now we need to a assign absolute dates to all our periods. chrongler expects dates BCE to be negative and dates CE to be positive values. Obviously, how you categorize and date periods in the place you are working at depends on many things, and this is just an example. I am using the values from these chronOntology-pages:
+* [Early Roman Republic](https://chronontology.dainst.org/period/Y863Mey70o4t)
+* [High Roman Republic](https://chronontology.dainst.org/period/DFLVz4nASAC7)
+* [Late Roman Republic](https://chronontology.dainst.org/period/GzPQDbfWXlR8)
+* [Early Roman Empire](https://chronontology.dainst.org/period/vve7mgqkCAGE) 
+* [High Roman Empire](https://chronontology.dainst.org/period/OTyMiCtkjqCz) 
+* [Late Roman Empire](https://chronontology.dainst.org/period/7fDysWha7NKs)
+
+Avoid using overlapping dates or identical start and end dates for different periods. (I modified the end of *High Roman Empire* to conform to that.) Ideally, your group has the maximum extend of all periods it contains, though this is not the case in the chronOntology-period we are using, so I modified this again.
+
+```{r}
+conc_df$dating.min <- c(-509, -509, -264, -145, -30, -30, 69, 235)
+conc_df$dating.max <- c(-31, -265, -146, -31, 476, 68, 234, 476)
+```
+
+It is optional, but you should consider adding some sources to your table or data.frame for future transparency. Supply them either as a list detailing what you are adding, or as a simple character vector:
+
+```{r}
+conc_df$source <- list(
+  list(URL = "http://chronontology.dainst.org/period/RX2Rv7kcbLGk", comment = "dates slightly changed"),
+  list(URL = "https://chronontology.dainst.org/period/Y863Mey70o4t"),
+  list(URL = "https://chronontology.dainst.org/period/DFLVz4nASAC7"),
+  list(URL = "https://chronontology.dainst.org/period/GzPQDbfWXlR8", comment = "dates slightly changed"),
+  list(URL = "https://chronontology.dainst.org/period/bCTpXj4LVC2n", comment = "dates slightly changed"),
+  list(URL = "https://chronontology.dainst.org/period/vve7mgqkCAGE"),
+  list(URL = "https://chronontology.dainst.org/period/OTyMiCtkjqCz", comment = "dates slightly changed"),
+  list(URL = "https://chronontology.dainst.org/period/7fDysWha7NKs")
+)
+```
+
+When importing a csv-file, you would need to reformat this column manually if you wish to add a commented list. Again, optionally, you can supply a custom colour scale to each period:
+
+```{r}
+conc_df$color <- c("#00ACC1", "#00ACC1", "#0097A7", "#00838F", "#1565C0", "#1976D2", "#1565C0", "#0D47A1")
+```
+
+The resulting data.frame should look this: 
+
+```{r echo = FALSE}
+knitr::kable(conc_df)
+```
+
+Obviously, it is much more convenient for you to put all this information together in some spreadsheet software and then import it here, rather than producing the object in this way in R. I simply wanted to comment in detail on the values expected by chrongler and the logic behind this. The actual function is as simple as it gets, though depending on your table you can supply a list of column names or indices to the 'cols' argument - if for some reason they are different than the ones used in the above example. See the documentation for info on that (`?make_chrongler_conc`). Order of the columns is not important.
+
+```{r }
+conc <- make_chrongler_conc(conc_df)
+```
+
+The concordance-list will contain all the original information (albeit in list format) in the **all**-sublist. **group** will contain a list for each group, in which the respective periods are listed as an ordered factor. **group.order** is an ordered factor of all groups. **period.order** is an orderes factor of all periods that are not groups. **dating**, **color** and **source** contain the respective information for each period, with **dating** divided into a **from** and **to** date. 
+
+All other chrongler-functions expect this concordance along with the actual data. Obviously, periods in the actual data are expected to match the periods in this concordance. 
+
+# Example data
+
+We will use example data with no connection to the real world for this vignette, which illustrates some of the situations we have with real world data, i.e. spans of multiple groups, mixes of groups and periods etc.:
+
+```{r echo = FALSE}
+data_df <- data.frame(identifier = paste0("Obj_", seq(1, 10, 1)))
+data_df$start <- c("Late Roman Empire", "Early Roman Republic", "Early Roman Republic", "Early Roman Empire", "Roman Republic", "High Roman Republic", "Roman Republic", "High Roman Empire", "Late Roman Republic", "Early Roman Empire")
+data_df$end <- c("Late Roman Empire", "High Roman Republic", "High Roman Empire", "High Roman Empire", "Roman Empire", "Late Roman Republic", "Early Roman Empire", "High Roman Empire", "Early Roman Empire", "Late Roman Empire")
+knitr::kable(data_df)
+```
+
+As you can see, every object is dated to a *period*. This can either be one of the finer chronological periods (early, high and late republican or imperial) or one of the two groups.
+
+# Grouping and Ungrouping
+
+With chrongler and our previously put together concordance, we can now simply get all of these datings to the same level of resolution, for example by "ungrouping" them. The `ungroup_periods()`-function takes the data, our concordance, and the columns names or indices of the respective start and end columns as arguments: 
+
+```{r}
+ungrouped_data <- ungroup_periods(data_df, conc, start = "start", end = "end")
+```
+```{r}
+knitr::kable(ungrouped_data)
+```
+As you can see, Objects 5 and 7 are now represented by the earliest or latest period from the respective group, depending on whether it was set as the start or end date.
+
+`group_periods()` does exactly the reverse:
+
+```{r}
+grouped_data <- group_periods(ungrouped_data, conc, start = "start.ungr", end = "end.ungr")
+```
+```{r echo = FALSE}
+knitr::kable(grouped_data)
+```
+
+# Deriving the Absolute Dating
+
+Using the concordance, we can assign a numerical dating range to each object based on the period(d) it is dated to. Be aware of the implications of doing that: In my opinion, this in only useful to present a broad chronological overview of large amounts of data and should not be used for any subsequent qualitative work on the objects themselves. 
+
+```{r}
+data_abs <- derive_dating(data_df, conc, start = "start", end = "end")
+```
+```{r echo = FALSE}
+knitr::kable(data_abs)
+```
+
+Be aware: if your data.frame already contains columns called "dating.min", "dating.max" and "dating.source" (see also in the documentation of `?derive_dating`) only `NA`-values will be filled with the rest of the data remaining untouched. 
+
+Likewise, we can derive the period in cases where we only know the absolute dating. Let's use these somewhat arbitrary numbers: 
+
+```{r}
+data_rd <- data.frame(identifier = paste0("Obj_", seq(11, 20, 1)))
+data_rd$dating.min <- sample(seq(min(conc_df$dating.min), max(conc_df$dating.min)-100, 1), 10)
+data_rd$dating.max <- data_rd$dating.min + sample(1:100, 10)
+```
+```{r echo = FALSE}
+knitr::kable(data_rd)
+```
+
+And automatically add the period range: 
+
+```{r}
+data_rd_pr <- derive_period(data_rd, conc, dating.min = "dating.min", dating.max = "dating.max")
+```
+```{r echo = FALSE}
+knitr::kable(data_rd_pr)
+```
+
+# Duplicating Objects by Dating
+
+In some cases - especially when working with period ranges, one would like to have a row for each dating 'instance' of an object. You can either to this by group or by period:
+
+```{r}
+gr_dupl <- duplicate_by(data_rd_pr, conc, start = "period.start", end = "period.end", by_group = TRUE)
+```
+```{r echo = FALSE}
+knitr::kable(gr_dupl)
+```
+
+
+```{r}
+pr_dupl <- duplicate_by(data_rd_pr, conc, start = "period.start", end = "period.end", by_group = FALSE)
+```
+```{r echo = FALSE}
+knitr::kable(pr_dupl)
+```
