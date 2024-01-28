@@ -24,10 +24,12 @@
 #'
 #' @examples
 #' data("BuildingsMilet")
-#' data("exChronglerConc")
+#' conc <- read.csv(system.file(package = "chrongler",
+#'   "extdata/2023_periods_grouping_example.csv"))
+#' conc <- make_chrongler_conc(conc)
 #' group_periods(
 #'   BuildingsMilet,
-#'   exChronglerConc,
+#'   conc,
 #'   start = "period.start",
 #'   end = "period.end"
 #'  )
@@ -58,10 +60,10 @@ group_periods <- function(data, conc, start, end) {
     }
   })
 
-  res_start <- ordered(res_start, levels = conc$group.order)
-  data[, start] <- res_start
-  res_end <- ordered(res_end, levels = conc$group.order)
-  data[, end] <- res_end
+  start.grpd <- ordered(res_start, levels = conc$group.order)
+  data <- cbind(data, start.grpd)
+  end.grpd <- ordered(res_end, levels = conc$group.order)
+  data <- cbind(data, end.grpd)
 
   return(data)
 }

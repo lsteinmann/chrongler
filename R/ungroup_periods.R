@@ -57,10 +57,10 @@ ungroup_periods <- function(data, conc, start, end) {
     }
   })
 
-  res_start <- ordered(res_start, levels = conc$period.order)
-  data[, start] <- res_start
-  res_end <- ordered(res_end, levels = conc$period.order)
-  data[, end] <- res_end
+  start.ungr <- ordered(res_start, levels = conc$period.order)
+  data <- cbind(data, start.ungr)
+  end.ungr <- ordered(res_end, levels = conc$period.order)
+  data <- cbind(data, end.ungr)
 
   return(data)
 }
