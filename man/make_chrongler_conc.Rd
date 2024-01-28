@@ -6,7 +6,8 @@
 \usage{
 make_chrongler_conc(
   file,
-  cols = list(group = NA, values = NA, dating.min = NA, dating.max = NA, color = NA)
+  cols = list(group = NA, values = NA, dating.min = NA, dating.max = NA, color = NA,
+    source = NA)
 )
 }
 \arguments{
@@ -47,8 +48,14 @@ color scales in plots.
 }
 \examples{
 \dontrun{
-file <- system.file(package = "chrongler",
+filename <- system.file(package = "chrongler",
                     "extdata/2023_periods_grouping_example.csv")
-make_chrongler_conc(file)
+conc <- make_chrongler_conc(filename)
+str(conc)
+
+filename <- system.file(package = "chrongler", "extdata/2023_periods_grouping_example.csv")
+table <- read.csv(filename)
+conc <- make_chrongler_conc(table)
+str(conc)
 }
 }

@@ -16,9 +16,12 @@
 #'
 #' @examples
 #' data("BuildingsMilet")
-#' data("exChronglerConc")
 #'
-#' duplicate_by(BuildingsMilet, exChronglerConc,
+#' filename <- system.file(package = "chrongler",
+#'                        "extdata/2023_periods_grouping_example.csv")
+#' conc <- make_chrongler_conc(filename)
+#'
+#' duplicate_by(BuildingsMilet, conc,
 #'              start = "period.start", end = "period.end",
 #'              by_group = FALSE)
 #'

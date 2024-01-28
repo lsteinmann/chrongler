@@ -31,10 +31,12 @@ already are listed as groups are not changed.
 }
 \examples{
 data("BuildingsMilet")
-data("exChronglerConc")
+conc <- read.csv(system.file(package = "chrongler",
+  "extdata/2023_periods_grouping_example.csv"))
+conc <- make_chrongler_conc(conc)
 group_periods(
   BuildingsMilet,
-  exChronglerConc,
+  conc,
   start = "period.start",
   end = "period.end"
  )

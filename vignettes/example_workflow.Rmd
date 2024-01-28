@@ -1,5 +1,5 @@
 ---
-title: "Example workflow with chrongler"
+title: "example_workflow"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{example_workflow}

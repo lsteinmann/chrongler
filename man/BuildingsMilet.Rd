@@ -24,7 +24,4 @@ BuildingsMilet
 A subset of data from the Map of Miletus for testing and demonstrating
 working with the R-Package chrongler.
 }
-\seealso{
-\link{exChronglerConc}
-}
 \keyword{datasets}

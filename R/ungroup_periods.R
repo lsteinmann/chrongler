@@ -18,10 +18,12 @@
 #'
 #' @examples
 #' data("BuildingsMilet")
-#' data("exChronglerConc")
+#' filename <- system.file(package = "chrongler",
+#'                        "extdata/2023_periods_grouping_example.csv")
+#' conc <- make_chrongler_conc(filename)
 #' ungroup_periods(
 #'   BuildingsMilet,
-#'   exChronglerConc,
+#'   conc,
 #'   start = "period.start",
 #'   end = "period.end"
 #'  )
