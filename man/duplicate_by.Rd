@@ -29,7 +29,12 @@ A data.frame, with a row for each period in which each row from the
 previous data would fall (see description).
 }
 \description{
-Duplicate each Row for each Period in the Range from start to end
+For each period one object may be placed in according to the range
+provided by the \code{start} and \code{end} columns of the data.frame \code{data}, the
+associated row is duplicated as many times as possible periods the objects
+might be placed in according to the concordance object supplied to
+\code{conc} (\code{\link[=make_chrongler_conc]{make_chrongler_conc()}}). This way, each objects is
+represented by multiple rows in the result!
 }
 \examples{
 data("BuildingsMilet")

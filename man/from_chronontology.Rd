@@ -19,7 +19,8 @@ A nested list with the data for one period downloaded
 from iDAI.chronontology.
 }
 \description{
-Get Data for One Period from iDAI.chronontology
+Downloads one specific dataset from
+\href{https://chronontology.dainst.org/}{iDAI.chronontology}.
 }
 \examples{
 geometric <- from_chronontology("AqUgeWHp0xIl")

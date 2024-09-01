@@ -3,6 +3,12 @@
 \name{query_chronontology}
 \alias{query_chronontology}
 \title{Basic Query for iDAI.chronontology}
+\source{
+\itemize{
+\item data: \href{https://chronontology.dainst.org/}{iDAI.chronontology}
+\item api: \href{https://github.com/dainst/chronontology-backend/blob/master/docs/rest-api-reference.md}{chronontology REST API reference}
+}
+}
 \usage{
 query_chronontology(value = "roman")
 }
@@ -13,9 +19,14 @@ query_chronontology(value = "roman")
 A list of results as handed out by iDAI.chronontology.
 }
 \description{
-Basic Query for iDAI.chronontology
+This function searches all iDAI.chronontology periods for the string
+supplied as 'value'. It always gets all available results.
+No further filtering or more specific querying is implemented (yet).
 }
 \examples{
 roman_periods <- query_chronontology(value = "roman")
 names <- unlist(lapply(roman_periods, function(x) x$resource$names$en))
+}
+\seealso{
+\code{\link[=from_chronontology]{from_chronontology()}}
 }

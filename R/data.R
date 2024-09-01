@@ -9,5 +9,5 @@
 #'   \item{identifier}{The name of a building in Miletus.}
 #'   \item{period.start, period.end}{The earliest and latest period each building is dated to.}
 #' }
-#' @source <https://geoserver.dainst.org/catalogue/#/map/5764>
+#' @source <https://geoserver.dainst.org/catalogue/uuid/53438148-30d1-11ec-9582-0242ac140004>
 "BuildingsMilet"

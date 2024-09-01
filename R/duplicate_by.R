@@ -1,6 +1,11 @@
 #' Duplicate each Row for each Period in the Range from start to end
 #'
-#'
+#' For each period one object may be placed in according to the range
+#' provided by the `start` and `end` columns of the data.frame `data`, the
+#' associated row is duplicated as many times as possible periods the objects
+#' might be placed in according to the concordance object supplied to
+#' `conc` ([make_chrongler_conc()]). This way, each objects is
+#' represented by multiple rows in the result!
 #'
 #'
 #' @inheritParams group_periods

@@ -27,6 +27,9 @@ dl_chrnt_json <- function(id = "") {
 
 #' Get Data for One Period from iDAI.chronontology
 #'
+#' Downloads one specific dataset from
+#' [iDAI.chronontology](https://chronontology.dainst.org/).
+#'
 #' @inheritParams dl_chrnt_json
 #'
 #' @source data: [iDAI.chronontology](https://chronontology.dainst.org/)
@@ -42,6 +45,7 @@ dl_chrnt_json <- function(id = "") {
 from_chronontology <- function(id = "") {
   res <- dl_chrnt_json(id = id)
   # todo ;)
+  # some formatting may (or may not) be helpful // maybe make optional via an argument
 
   return(res)
 }

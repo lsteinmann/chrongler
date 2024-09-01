@@ -15,7 +15,7 @@ A data frame with 110 rows and 3 columns:
 }
 }
 \source{
-\url{https://geoserver.dainst.org/catalogue/#/map/5764}
+\url{https://geoserver.dainst.org/catalogue/uuid/53438148-30d1-11ec-9582-0242ac140004}
 }
 \usage{
 BuildingsMilet

@@ -1,10 +1,18 @@
 #' Basic Query for iDAI.chronontology
 #'
-#'
+#' This function searches all iDAI.chronontology periods for the string
+#' supplied as 'value'. It always gets all available results.
+#' No further filtering or more specific querying is implemented (yet).
 #'
 #' @param value (chr) The value you want to search for in all chronontology-periods.
 #'
 #' @return A list of results as handed out by iDAI.chronontology.
+#'
+#' @source
+#'  * data: [iDAI.chronontology](https://chronontology.dainst.org/)
+#'  * api: [chronontology REST API reference](https://github.com/dainst/chronontology-backend/blob/master/docs/rest-api-reference.md)
+#'
+#' @seealso [from_chronontology()]
 #'
 #' @export
 #'

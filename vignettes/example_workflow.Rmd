@@ -40,6 +40,12 @@ We will get the dates and values for our examples manually from [iDAI.chronontol
 ```{r eval = FALSE}
 from_chronontology(id = "RX2Rv7kcbLGk")
 ```
+Or by getting multiple results with a very simple and basic query that cannot do much (yet), and selecting the ones which fit:
+
+```{r eval = FALSE}
+query_chronontology(value = "roman")
+```
+
 
 This will give you a nested list with the data you can see on the page, including relations to other periods. It would be possible to automatically import a group of periods this way, but I have not implemented it, because the data can be rather heterogeneous. In any case, we will proceed to enter everything manually in this vignette.
 
