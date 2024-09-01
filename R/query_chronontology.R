@@ -24,7 +24,7 @@ query_chronontology <- function(value = "roman") {
   list <- jsonlite::fromJSON(response, FALSE)
 
   if (list$total > length(list$results)) {
-    response <- ChronClient$get(path = paste0('data/', type, '/?q=', value, '&size=', list$total))
+    response <- ChronClient$get(path = paste0('data/period/?q=', value, '&size=1'))
     response <- response$parse("UTF-8")
     list <- jsonlite::fromJSON(response, FALSE)
   }
