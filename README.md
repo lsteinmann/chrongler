@@ -5,9 +5,11 @@
 <!-- badges: end -->
 
 # chrongler wrangles categorical chronological data
+
 This package provides convenience functions that are helpful for working with archaeological or historical data, where chronological information is stored as a 'period' (categorical values that may indicate chronology in one way or another). The functions are purely for formatting and 'wrangling' such data, and do not contain any means of analysis or further processing. 
 
 # Installation
+
 chrongler is not on CRAN. You can install the current version from GitHub using: 
 ``` r
 remotes::install_github("lsteinmann/chrongler", build_vignettes = TRUE)
@@ -23,6 +25,7 @@ Using chrongler (and a concordance of periods and their grouping and absolute da
 * download the data for one period from [iDAI.chronontology](https://chronontology.dainst.org/) (`from_chronontology()`, it's a bit of a work in progress...)
 
 The inaccurately named "example_workflow"-vignette explains the functions and especially setting up the concordance in detail, see:
+
 ``` r
 browseVignettes("chrongler")
 ```

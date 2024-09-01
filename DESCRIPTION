@@ -16,7 +16,8 @@ Description: This package provides convenience functions that are helpful
 License: GPL (>= 3)
 Depends: 
     R (>= 3.3),
-    jsonlite
+    jsonlite,
+    crul
 Suggests: 
     covr,
     dplyr,
@@ -27,5 +28,5 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 VignetteBuilder: knitr
