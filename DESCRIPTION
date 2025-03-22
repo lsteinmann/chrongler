@@ -1,18 +1,17 @@
 Type: Package
 Package: chrongler
 Title: chrongler wrangles categorical chronological data
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R: 
     person("Lisa", "Steinmann", , "lisa.steinmann@rub.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2215-1243"))
 Author: Lisa Steinmann
 Maintainer: Lisa Steinmann <lisa.steinmann@rub.de>
-Description: This package provides convenience functions that are helpful
-    for working with archaeological or historical data were chronological
+Description: Dealing with archaeological or historical chronological data 
+    can be time consuming. chrongler provides convenience functions the 
+    help reformat or 'wrangle' data were chronological
     information is stored as a 'period' (categorical values that may
-    indicate chronology in one way or another). The functions are purely
-    for formatting and 'wrangling' such data, and do not contain any means
-    of analysis or further processing.
+    indicate chronology in one way or another). 
 License: GPL (>= 3)
 Depends: 
     R (>= 3.3),

@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-chrongler is an R-package that contains functions meant to re-format archaeological or historical "periods" stored as categorial variables. Using a concordance provided by the user, the periods can be replaced with absolute values taken from that concordance. This vignettes comments and illustrate the functions chrongler provides.
+**chrongler** is an R-package that contains functions meant to re-format archaeological or historical "periods" stored as categorical variables. Using a concordance provided by the user, the periods can be replaced with absolute values taken from that concordance. This vignettes comments and illustrate the functions chrongler provides.
 
 # Installing chrongler
 
@@ -114,7 +114,7 @@ Obviously, it is much more convenient for you to put all this information togeth
 conc <- make_chrongler_conc(conc_df)
 ```
 
-The concordance-list will contain all the original information (albeit in list format) in the **all**-sublist. **group** will contain a list for each group, in which the respective periods are listed as an ordered factor. **group.order** is an ordered factor of all groups. **period.order** is an orderes factor of all periods that are not groups. **dating**, **color** and **source** contain the respective information for each period, with **dating** divided into a **from** and **to** date. 
+The concordance-list will contain all the original information (albeit in list format) in the **all**-sublist. **group** will contain a list for each group, in which the respective periods are listed as an ordered factor. **group.order** is an ordered factor of all groups. **period.order** is an ordered factor of all periods that are not groups. **dating**, **color** and **source** contain the respective information for each period, with **dating** divided into a **from** and **to** date. 
 
 All other chrongler-functions expect this concordance along with the actual data. Obviously, periods in the actual data are expected to match the periods in this concordance. 
 

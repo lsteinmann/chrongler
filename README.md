@@ -1,7 +1,6 @@
 <!-- badges: start -->
-
-[![R-CMD-check](https://github.com/lsteinmann/chrongler/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lsteinmann/chrongler/actions/workflows/R-CMD-check.yaml) [![Codecov test coverage](https://codecov.io/gh/lsteinmann/chrongler/branch/main/graph/badge.svg)](https://codecov.io/gh/lsteinmann/chrongler?branch=main)
-
+[![R-CMD-check](https://github.com/lsteinmann/chrongler/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lsteinmann/chrongler/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/lsteinmann/chrongler/graph/badge.svg)](https://app.codecov.io/gh/lsteinmann/chrongler)
 <!-- badges: end -->
 
 # *chrongler* wrangles categorical chronological data
