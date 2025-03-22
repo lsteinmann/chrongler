@@ -8,11 +8,14 @@
 #' @param name A character string representing the name of the period.
 #' This must be a single string. (Or: In [make_chrongler_periods()] a vector.)
 #' @param start_date A numeric value representing the start date of the period.
-#' It must be numeric and less than the end date. Negative values for dates BCE. (Or: In [make_chrongler_periods()] a vector.)
+#' It must be numeric and less than the end date. Negative values for dates BCE.
+#' (Or: In [make_chrongler_periods()] a vector.)
 #' @param end_date A numeric value representing the end date of the period.
-#' It must be numeric and greater than the start date. Negative values for dates BCE. (Or: In [make_chrongler_periods()] a vector.)
+#' It must be numeric and greater than the start date. Negative values for dates BCE.
+#' (Or: In [make_chrongler_periods()] a vector.)
 #' @param group (Optional) A character string representing the group to which
-#' this period belongs. If not provided, the period name is used as the group. (Or: In [make_chrongler_periods()] a vector.)
+#' this period belongs. If not provided, the period name is used as the group.
+#' (Or: In [make_chrongler_periods()] a vector.)
 #' @param color (Optional) A character string representing the color
 #' associated with this period (e.g., a hex color code). (Or: In [make_chrongler_periods()] a vector.)
 #' @param source (Optional) A character string representing the source
@@ -27,8 +30,10 @@
 #' \item{source}{The source of the period's data (if provided).}
 #'
 #' @details
-#' The function ensures that the `start_date` and `end_date` are numeric, and that `start_date` is strictly less than `end_date`.
-#' If any required fields are missing or invalid, the function will stop execution and provide an appropriate error message.
+#' The function ensures that the `start_date` and `end_date` are numeric,
+#' and that `start_date` is strictly less than `end_date`.
+#' If any required fields are missing or invalid, the function will stop
+#' execution and provide an appropriate error message.
 #' If no group is provided, the period's name will be used as its group.
 #'
 #' @seealso [make_chrongler_periods] for producing multiple `chrongler_period` objects at once.
@@ -36,13 +41,26 @@
 #'
 #' @examples
 #' # Create a new chrongler_period object for the "Early Classical" period
-#' classical_period <- new_chrongler_period("Early classical", -480, -426, "Classical", "#FF5733", "I made it all up.")
+#' period <- new_chrongler_period(
+#'   name = "Early classical",
+#'   start_date = -480,
+#'   end_date = -426,
+#'   group = "Classical",
+#'   color = "#582BA8",
+#'   source = "I made it all up."
+#' )
 #'
 #' # Create a period with default group set to the name
 #' unnamed_group_period <- new_chrongler_period("Random Period", -10000, 2000)
 #'
 #' @export
-new_chrongler_period <- function(name, start_date, end_date, group = NULL, color = NULL, source = NULL) {
+new_chrongler_period <- function(
+    name,
+    start_date,
+    end_date,
+    group = NULL,
+    color = NULL,
+    source = NULL) {
   # Validate inputs
   if (!is.character(name) || length(name) != 1) stop("name must be a single string")
 
@@ -93,8 +111,9 @@ print.chrongler_period <- function(x, ...) {
 
 #' Coerce chrongler_period to a Vector
 #'
-#' This function coerces a `chrongler_period` object into a character vector. It is dispatched
-#' when `as.vector` is called on an object of class `chrongler_period`.
+#' This function coerces a `chrongler_period` object into a character vector.
+#' It is dispatched when `as.vector` is called on an object of
+#' class `chrongler_period`.
 #'
 #' @param x A `chrongler_period` object.
 #' @param ... Additional arguments passed to or from other methods.
@@ -201,7 +220,13 @@ as.matrix.list <- function(x, ...) {
 #' periods <- make_chrongler_periods(names, start_dates, end_dates, groups, colors)
 #'
 #' @export
-make_chrongler_periods <- function(name, start_date, end_date, group = NULL, color = NULL, source = NULL) {
+make_chrongler_periods <- function(
+    name,
+    start_date,
+    end_date,
+    group = NULL,
+    color = NULL,
+    source = NULL) {
   vlen <- c(length(name), length(start_date), length(end_date))
   if (!is.null(group)) vlen <- c(vlen, length(group))
   if (!is.null(color)) vlen <- c(vlen, length(color))
