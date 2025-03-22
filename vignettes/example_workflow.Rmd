@@ -14,11 +14,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-**chrongler** is an R-package that contains functions meant to re-format archaeological or historical "periods" stored as categorical variables. Using a concordance provided by the user, the periods can be replaced with absolute values taken from that concordance. This vignettes comments and illustrate the functions chrongler provides.
+**chrongler** is an R-package that contains functions meant to re-format archaeological or historical "periods" stored as categorical variables. Using a concordance provided by the user, the periods can be replaced with absolute values taken from that concordance. This vignettes comments on and illustrates the functions **chrongler** provides.
 
-# Installing chrongler
+# Installing **chrongler**
 
-chrongler is not on CRAN. You can install the latest version from the [GitHub-repository](https://github.com/lsteinmann/chrongler) using: 
+**chrongler** is not on CRAN. You can install the latest version from the [GitHub-repository](https://github.com/lsteinmann/chrongler) using: 
 
 ```{r installation, eval = FALSE}
 remotes::install_github("lsteinmann/chrongler", build_vignettes = TRUE)
@@ -32,7 +32,7 @@ library(chrongler)
 
 # Preparing the Concordance
 
-chrongler relies on a concordance object supplied by the user. The concordance can be brought into the format needed by chrongler using the `make_chrongler_conc()`-function. While it is easier to create the data in some spreadsheet software and import a csv-file, I will demonstrate the data structure here by putting it together in R. 
+**chrongler** relies on a concordance object supplied by the user. The concordance can be brought into the format needed by **chrongler** using the `make_chrongler_conc()`-function. While it is easier to create the data in some spreadsheet software and import a csv-file, I will demonstrate the data structure here by putting it together in R. 
 
 ## iDAI.chronontology
 We will get the dates and values for our examples manually from [iDAI.chronontology](https://chronontology.dainst.org/). You can download a the data from one chronOntology-period directly like this, the `id` being the last part of the URL: 
@@ -51,7 +51,7 @@ This will give you a nested list with the data you can see on the page, includin
 
 ## Creating the Example Data
 
-Let's use the *[Roman Republic](https://chronontology.dainst.org/period/RX2Rv7kcbLGk)* and the *[Roman Empire]((https://chronontology.dainst.org/period/bCTpXj4LVC2n))* as an easy example.  *Roman Republic* contains three basic periods: "Early Roman Republic", "High Roman Republic", "Late Roman Republic". *Roman Empire* also contains three periods: "Early Roman Empire", "High Roman Empire" and "Late Roman Empire"). Thus, our data.frame (or spreadsheet) would need at least six rows. Since it is needed for some optional functionality, I will also treat the groups themselves (*Roman Republic* and *Roman Empire*) as another period:
+Let's use the *[Roman Republic](https://chronontology.dainst.org/period/RX2Rv7kcbLGk)* and the *[Roman Empire](https://chronontology.dainst.org/period/bCTpXj4LVC2n)* as an easy example.  *Roman Republic* contains three basic periods: "Early Roman Republic", "High Roman Republic", "Late Roman Republic". *Roman Empire* also contains three periods: "Early Roman Empire", "High Roman Empire" and "Late Roman Empire"). Thus, our data.frame (or spreadsheet) would need at least six rows. Since it is needed for some optional functionality, I will also treat the groups themselves (*Roman Republic* and *Roman Empire*) as another period:
 
 ```{r}
 conc_df <- data.frame(values = c("Roman Republic", "Early Roman Republic", "High Roman Republic", "Late Roman Republic", "Roman Empire", "Early Roman Empire", "High Roman Empire", "Late Roman Empire"))
@@ -64,7 +64,7 @@ conc_df$group <- c(rep("Roman Republic", 4), rep("Roman Empire", 4))
 
 conc_df
 ```
-Now we need to a assign absolute dates to all our periods. chrongler expects dates BCE to be negative and dates CE to be positive values. Obviously, how you categorize and date periods in the place you are working at depends on many things, and this is just an example. I am using the values from these chronOntology-pages:
+Now we need to a assign absolute dates to all our periods. **chrongler** expects dates BCE to be negative and dates CE to be positive values. Obviously, how you categorize and date periods in the place you are working at depends on many things, and this is just an example. I am using the values from these chronOntology-pages:
 * [Early Roman Republic](https://chronontology.dainst.org/period/Y863Mey70o4t)
 * [High Roman Republic](https://chronontology.dainst.org/period/DFLVz4nASAC7)
 * [Late Roman Republic](https://chronontology.dainst.org/period/GzPQDbfWXlR8)
@@ -108,7 +108,7 @@ knitr::kable(conc_df)
 
 ## The Concordance
 
-Obviously, it is much more convenient for you to put all this information together in some spreadsheet software and then import it here, rather than producing the object in this way in R. I simply wanted to comment in detail on the values expected by chrongler and the logic behind this. The actual function is as simple as it gets, though depending on your table you can supply a list of column names or indices to the 'cols' argument - if for some reason they are different than the ones used in the above example. See the documentation for info on that (`?make_chrongler_conc`). Order of the columns is not important.
+Obviously, it is much more convenient for you to put all this information together in some spreadsheet software and then import it here, rather than producing the object in this way in R. I simply wanted to comment in detail on the values expected by **chrongler** and the logic behind this. The actual function is as simple as it gets, though depending on your table you can supply a list of column names or indices to the 'cols' argument - if for some reason they are different than the ones used in the above example. See the documentation for info on that (`?make_chrongler_conc`). Order of the columns is not important.
 
 ```{r }
 conc <- make_chrongler_conc(conc_df)
@@ -116,7 +116,7 @@ conc <- make_chrongler_conc(conc_df)
 
 The concordance-list will contain all the original information (albeit in list format) in the **all**-sublist. **group** will contain a list for each group, in which the respective periods are listed as an ordered factor. **group.order** is an ordered factor of all groups. **period.order** is an ordered factor of all periods that are not groups. **dating**, **color** and **source** contain the respective information for each period, with **dating** divided into a **from** and **to** date. 
 
-All other chrongler-functions expect this concordance along with the actual data. Obviously, periods in the actual data are expected to match the periods in this concordance. 
+All other **chrongler**-functions expect this concordance along with the actual data. Obviously, periods in the actual data are expected to match the periods in this concordance. 
 
 # Example data
 
@@ -133,7 +133,7 @@ As you can see, every object is dated to a *period*. This can either be one of t
 
 # Grouping and Ungrouping
 
-With chrongler and our previously put together concordance, we can now simply get all of these datings to the same level of resolution, for example by "ungrouping" them. The `ungroup_periods()`-function takes the data, our concordance, and the columns names or indices of the respective start and end columns as arguments: 
+With **chrongler** and our previously put together concordance, we can now simply get all of these datings to the same level of resolution, for example by "ungrouping" them. The `ungroup_periods()`-function takes the data, our concordance, and the columns names or indices of the respective start and end columns as arguments: 
 
 ```{r}
 ungrouped_data <- ungroup_periods(data_df, conc, start = "start", end = "end")

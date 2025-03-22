@@ -96,3 +96,10 @@ test_that("dating not numeric", {
 
 
 
+#test_that("no failure on file name", {
+#  filename <- system.file(package = "chrongler",
+#                          "extdata/2023_periods_grouping_example.csv")
+#  conc <- make_chrongler_conc(filename)
+#  expect_equal(get_dating(conc, "Early imperial"), list(from = -31, to = 98))
+#})
+

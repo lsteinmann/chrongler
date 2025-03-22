@@ -42,12 +42,13 @@
 #' filename <- system.file(package = "chrongler",
 #'                     "extdata/2023_periods_grouping_example.csv")
 #' conc <- make_chrongler_conc(filename)
-#' str(conc)
+#' print(conc)
 #'
-#' filename <- system.file(package = "chrongler", "extdata/2023_periods_grouping_example.csv")
+#' filename <- system.file(package = "chrongler",
+#'                     "extdata/2023_periods_grouping_example.csv")
 #' table <- read.csv(filename)
 #' conc <- make_chrongler_conc(table)
-#' str(conc)
+#' print(conc)
 #' }
 make_chrongler_conc <- function(file,
                                 cols = list(group = NA, values = NA,
@@ -60,10 +61,10 @@ make_chrongler_conc <- function(file,
     if (all(file.exists(file)) & all(grepl("csv", file))) {
       data <- read.csv(file)
     } else {
-      stop("`chrongler_conc()` needs a data.frame, matrix or path to an existing csv-file.")
+      stop("`make_chrongler_conc()` needs a data.frame, matrix or path to an existing csv-file.")
     }
   } else {
-    stop("`chrongler_conc()` cannot handle the value supplied as 'file'.")
+    stop("`make_chrongler_conc()` cannot handle the value supplied as 'file'.")
   }
 
   for (i in seq_along(cols)) {
@@ -172,7 +173,155 @@ make_chrongler_conc <- function(file,
                color = colors,
                source = sources)
 
-  class(conc) <- c("list", "chrongler.conc")
+  # Assign the class
+  class(conc) <- c("chrongler.conc", class(conc))
 
   return(conc)
+}
+
+
+#' Produce a concordance object that can be used with `chrongler` functions
+#'
+#' @param x A list of chrongler_periods
+#'
+#' @returns A list of S3-class chrongler.conc
+#' @export
+#'
+#' @examples
+#' print("not now")
+chrongler_concordance <- function(x) {
+  stopifnot(is.list(x))
+  valid <- unlist(lapply(x, function(x) inherits(x, "chrongler_period")))
+
+  if (!any(valid)) stop("make_chrongler_conc() needs a list of chrongler_periods.")
+
+  groups <- lapply(x, function(y) y["group"])
+  groups <- unique(unlist(groups, use.names = FALSE))
+
+  periods <- lapply(x, function(y) y["name"])
+  periods <- unlist(periods, use.names = FALSE)
+
+  if (length(periods) > length(unique(periods))) {
+    stop("Duplicate names.")
+  }
+
+  colors <- lapply(x, function(y) y["color"])
+  colors <- unlist(colors, use.names = FALSE)
+
+
+  if (length(colors) > 0) {
+    names(colors) <- periods
+  } else {
+    colors <- rep(NA, length(periods))
+  }
+
+  sources <- lapply(x, function(y) y["source"])
+  sources <- unlist(sources, use.names = FALSE)
+
+  if (length(sources) > 0) {
+    names(sources) <- periods
+  } else {
+    sources <- rep(NA, length(periods))
+  }
+
+  grouped <- lapply(groups, function (per_group) {
+    res <- Filter(function(y) y["group"] == per_group, x)
+    res <- lapply(res, function(y) y["name"])
+    res <- unname(unlist(res))
+    return(res)
+  })
+
+  if (length(grouped) > 0) {
+    names(grouped) <- groups
+  }
+
+  ordered_periods <- unname(unlist(grouped))
+  ordered_periods <- factor(ordered_periods, levels = ordered_periods, ordered = TRUE)
+
+  grouped <- lapply(grouped, function(y) {
+    y <- factor(y, levels = ordered_periods, ordered = TRUE)
+  })
+
+  dating <- lapply(periods, function(y) {
+    res <- Filter(function(z) z["name"] == y, x)
+
+    from <- lapply(res, function(z) z["start_date"])
+    from <- unname(unlist(from))
+    to <- lapply(res, function(z) z["end_date"])
+    to <- unname(unlist(to))
+
+    list(from = from,
+         to = to)
+  })
+  if (length(dating) > 0) {
+    names(dating) <- periods
+  }
+
+  ordered_groups <- factor(groups, levels = groups, ordered = TRUE)
+
+
+  all <- x
+  if (length(all) > 0) {
+    names(all) <- periods
+  }
+
+  conc <- list(all = all,
+               grouped = grouped,
+               group.order = ordered_groups,
+               period.order = ordered_periods,
+               dating = dating,
+               color = colors,
+               source = sources)
+
+  # Assign the class
+  class(conc) <- c("chrongler.conc", class(conc))
+
+  return(conc)
+}
+
+#' Print method for 'chrongler.conc' class
+#'
+#' @description
+#' A custom print method for the 'chrongler.conc' class that displays
+#' information about the concordance, including group and period order
+#' and the chronological range. It also reports how many `NA` values are
+#' present in the chronological range data.
+#'
+#' @param conc A 'chrongler.conc' object, which is a list that includes
+#'        concordance data such as group orders, period orders, and dating information.
+#'
+#' @details
+#' This function prints:
+#'  - The group order and period order of the concordance.
+#'  - The range of dates for the periods, excluding `NA` values.
+#'  - The number of `NA` values in the chronological data.
+#'
+#' If there are no valid chronological values, a message indicating that
+#' no valid chronological range is available is printed.
+#'
+#' @examples
+#' \dontrun{
+#' # Assuming `conc` is a 'chrongler.conc' object
+#' print(conc)
+#' }
+#'
+#' @export
+print.chrongler.conc <- function(x, ...) {
+  cat("Chrongler Concordance with",
+      length(x$period.order), "periods in",
+      length(x$group.order), "groups.\n")
+  cat("Group Order:\n")
+  print(x$group.order)
+  cat("\nPeriod Order:\n")
+  print(x$period.order)
+  cat("\nChronological Range:\n")
+  chron <- sapply(x$dating, function(x) c(x$from, x$to))
+  chron <- unlist(chron)
+  # If there are valid dating values, calculate the range
+  if (length(chron) > sum(is.na(chron))) {
+    cat("\nRange of dates (missing ", sum(is.na(chron)), "values):\n")
+    print(range(chron, na.rm = TRUE))
+  } else {
+    cat("No valid chronological range available.\n")
+  }
 }

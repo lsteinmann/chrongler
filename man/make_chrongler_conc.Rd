@@ -51,11 +51,12 @@ color scales in plots.
 filename <- system.file(package = "chrongler",
                     "extdata/2023_periods_grouping_example.csv")
 conc <- make_chrongler_conc(filename)
-str(conc)
+print(conc)
 
-filename <- system.file(package = "chrongler", "extdata/2023_periods_grouping_example.csv")
+filename <- system.file(package = "chrongler",
+                    "extdata/2023_periods_grouping_example.csv")
 table <- read.csv(filename)
 conc <- make_chrongler_conc(table)
-str(conc)
+print(conc)
 }
 }
