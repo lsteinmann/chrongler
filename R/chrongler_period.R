@@ -62,7 +62,9 @@ new_chrongler_period <- function(
     color = NULL,
     source = NULL) {
   # Validate inputs
-  if (!is.character(name) || length(name) != 1) stop("name must be a single string")
+  len <- c(length(name), length(start_date), length(end_date),
+           length(group), length(color), length(source))
+  if (any(len > 1)) stop("use make_chrongler_periods() for vectors")
 
   if (!is.numeric(start_date)) start_date <- suppressWarnings(as.numeric(start_date))
   if (!is.numeric(end_date)) end_date <- suppressWarnings(as.numeric(end_date))
@@ -74,9 +76,9 @@ new_chrongler_period <- function(
   if (start_date >= end_date) stop("start_date must be less than end_date")
 
   if (is.null(group) || group == "" || is.na(group)) {
+    # TODO: I should probably not do that at all!
     group <- name  # Assign period as its own group if none provided
   }
-  if (!is.character(group) || length(group) != 1) stop("name must be a single string")
 
   structure(
     list(
