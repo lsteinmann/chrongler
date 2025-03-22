@@ -155,7 +155,8 @@ as.matrix.list <- function(x, ...) {
 #'
 #' The comparison operators for `chrongler_period` objects are defined as follows:
 #'
-#' - `==`: Compares the `name`, `start_date`, and `end_date` of two `chrongler_period` objects.
+#' - `==`: Compares the `start_date`, and `end_date` of two `chrongler_period` objects.
+#' - `!=`: Compares the `start_date`, and `end_date` of two `chrongler_period` objects.
 #' - `<`: Compares the `start_date` of two `chrongler_period` objects.
 #' - `>`: Compares the `start_date` of two `chrongler_period` objects.
 #'
@@ -166,7 +167,13 @@ as.matrix.list <- function(x, ...) {
 #' @method == chrongler_period
 #' @export
 `==.chrongler_period` <- function(a, b) {
-  a$name == b$name && a$start_date == b$start_date && a$end_date == b$end_date
+  a$start_date == b$start_date && a$end_date == b$end_date
+}
+
+#' @method != chrongler_period
+#' @export
+`!=.chrongler_period` <- function(a, b) {
+  a$start_date != b$start_date && a$end_date != b$end_date
 }
 
 #' @method < chrongler_period

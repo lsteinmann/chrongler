@@ -20,7 +20,8 @@ These functions allow comparison between two \code{chrongler_period} objects bas
 \details{
 The comparison operators for \code{chrongler_period} objects are defined as follows:
 \itemize{
-\item \code{==}: Compares the \code{name}, \code{start_date}, and \code{end_date} of two \code{chrongler_period} objects.
+\item \code{==}: Compares the \code{start_date}, and \code{end_date} of two \code{chrongler_period} objects.
+\item \code{!=}: Compares the \code{start_date}, and \code{end_date} of two \code{chrongler_period} objects.
 \item \code{<}: Compares the \code{start_date} of two \code{chrongler_period} objects.
 \item \code{>}: Compares the \code{start_date} of two \code{chrongler_period} objects.
 }

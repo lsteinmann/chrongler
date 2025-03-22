@@ -110,6 +110,10 @@ test_that("multiple periods are processed with warning", {
 })
 
 
+
+
+# chrongler_period Methods
+
 test_that("a chrongler_period can be coerced to vector", {
   tmp <- new_chrongler_period("period", 100, 200, "group", "#ffffff", "source")
   res <- as.vector(tmp)
@@ -134,3 +138,18 @@ test_that("a list of chrongler_periods can be coerced to matrix", {
   expect_equal(nrow(res), length(tmp))
   expect_equal(ncol(res), length(chrongler_period_names))
 })
+
+
+test_that("two periods can be compared", {
+  earlier <- new_chrongler_period("earlier", -100, -50)
+  later <- new_chrongler_period("later", 100, 200)
+  later_sec <- new_chrongler_period("later two", 100, 200)
+
+  expect_true(later > earlier)
+  expect_true(earlier < later)
+  expect_true(later != earlier)
+  expect_true(later == later_sec)
+  expect_false(later < earlier)
+  expect_false(later == earlier)
+})
+
