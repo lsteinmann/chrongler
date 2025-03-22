@@ -18,13 +18,16 @@ new_chrongler_period(
 This must be a single string. (Or: In \code{\link[=make_chrongler_periods]{make_chrongler_periods()}} a vector.)}
 
 \item{start_date}{A numeric value representing the start date of the period.
-It must be numeric and less than the end date. Negative values for dates BCE. (Or: In \code{\link[=make_chrongler_periods]{make_chrongler_periods()}} a vector.)}
+It must be numeric and less than the end date. Negative values for dates BCE.
+(Or: In \code{\link[=make_chrongler_periods]{make_chrongler_periods()}} a vector.)}
 
 \item{end_date}{A numeric value representing the end date of the period.
-It must be numeric and greater than the start date. Negative values for dates BCE. (Or: In \code{\link[=make_chrongler_periods]{make_chrongler_periods()}} a vector.)}
+It must be numeric and greater than the start date. Negative values for dates BCE.
+(Or: In \code{\link[=make_chrongler_periods]{make_chrongler_periods()}} a vector.)}
 
 \item{group}{(Optional) A character string representing the group to which
-this period belongs. If not provided, the period name is used as the group. (Or: In \code{\link[=make_chrongler_periods]{make_chrongler_periods()}} a vector.)}
+this period belongs. If not provided, the period name is used as the group.
+(Or: In \code{\link[=make_chrongler_periods]{make_chrongler_periods()}} a vector.)}
 
 \item{color}{(Optional) A character string representing the color
 associated with this period (e.g., a hex color code). (Or: In \code{\link[=make_chrongler_periods]{make_chrongler_periods()}} a vector.)}
@@ -48,13 +51,22 @@ like name, start date, end date, group, color, and source. It validates the
 inputs and returns a structured list with the appropriate class.
 }
 \details{
-The function ensures that the \code{start_date} and \code{end_date} are numeric, and that \code{start_date} is strictly less than \code{end_date}.
-If any required fields are missing or invalid, the function will stop execution and provide an appropriate error message.
+The function ensures that the \code{start_date} and \code{end_date} are numeric,
+and that \code{start_date} is strictly less than \code{end_date}.
+If any required fields are missing or invalid, the function will stop
+execution and provide an appropriate error message.
 If no group is provided, the period's name will be used as its group.
 }
 \examples{
 # Create a new chrongler_period object for the "Early Classical" period
-classical_period <- new_chrongler_period("Early classical", -480, -426, "Classical", "#FF5733", "I made it all up.")
+period <- new_chrongler_period(
+  name = "Early classical",
+  start_date = -480,
+  end_date = -426,
+  group = "Classical",
+  color = "#582BA8",
+  source = "I made it all up."
+)
 
 # Create a period with default group set to the name
 unnamed_group_period <- new_chrongler_period("Random Period", -10000, 2000)

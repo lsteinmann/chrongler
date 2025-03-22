@@ -1,4 +1,4 @@
-
+# new_chrongler_period basics
 
 test_that("produces correct S3 class", {
   per <- new_chrongler_period(
@@ -12,6 +12,7 @@ test_that("produces correct S3 class", {
   expect_s3_class(per, "chrongler_period")
 })
 
+
 test_that("source and color are optional", {
   expect_s3_class(
     new_chrongler_period(
@@ -21,6 +22,42 @@ test_that("source and color are optional", {
       end_date = -426
     ),
     "chrongler_period"
+  )
+})
+
+
+test_that("error if relation between start and end date is wrong", {
+  expect_error(
+    new_chrongler_period(
+      name = "Early Classical",
+      group = "Classical",
+      start_date = 480,
+      end_date = -426
+    ),
+    "start_date"
+  )
+})
+
+
+test_that("only single character is accepted for name and group", {
+  expect_error(
+    new_chrongler_period(
+      name = c("Early Classical", "why"),
+      group = "Classical",
+      start_date = -480,
+      end_date = -426
+    ),
+    "make_chrongler_periods"
+  )
+
+  expect_error(
+    new_chrongler_period(
+      name = "Early Classical",
+      group = c("Classical", "idk"),
+      start_date = -480,
+      end_date = -426
+    ),
+    "make_chrongler_periods"
   )
 })
 
@@ -52,7 +89,8 @@ test_that("dating has to be numerical", {
   )
 })
 
-test_that("warns for missing dating", {
+
+test_that("error for missing dating", {
   expect_error(
     new_chrongler_period(
       name = "Early Classical",
@@ -81,6 +119,9 @@ test_that("warns for missing dating", {
 
 
 
+
+# make_chrongler_periods
+
 test_that("multiple periods are processed with warning if values are missing", {
   expect_warning(
     check <- make_chrongler_periods(
@@ -91,6 +132,83 @@ test_that("multiple periods are processed with warning if values are missing", {
     "undetermined"
   )
   expect_identical(check[["undetermined"]], NA)
+})
+
+
+test_that("error if vectors are not same length", {
+  tmp_data <- test_data[-19, ]
+
+  expect_error(
+    make_chrongler_periods(
+      name = tmp_data$values[-1],
+      start_date = tmp_data$dating.min,
+      end_date = tmp_data$dating.max,
+      group = tmp_data$group,
+      color = tmp_data$color,
+      source = rep("none", nrow(tmp_data))
+    ),
+    "length"
+  )
+
+  expect_error(
+    make_chrongler_periods(
+      name = tmp_data$values,
+      start_date = tmp_data$dating.min[-1],
+      end_date = tmp_data$dating.max,
+      group = tmp_data$group,
+      color = tmp_data$color,
+      source = rep("none", nrow(tmp_data))
+    ),
+    "length"
+  )
+
+  expect_error(
+    make_chrongler_periods(
+      name = tmp_data$values,
+      start_date = tmp_data$dating.min,
+      end_date = tmp_data$dating.max[-1],
+      group = tmp_data$group,
+      color = tmp_data$color,
+      source = rep("none", nrow(tmp_data))
+    ),
+    "length"
+  )
+
+  expect_error(
+    make_chrongler_periods(
+      name = tmp_data$values,
+      start_date = tmp_data$dating.min,
+      end_date = tmp_data$dating.max,
+      group = tmp_data$group[-1],
+      color = tmp_data$color,
+      source = rep("none", nrow(tmp_data))
+    ),
+    "length"
+  )
+
+  expect_error(
+    make_chrongler_periods(
+      name = tmp_data$values,
+      start_date = tmp_data$dating.min,
+      end_date = tmp_data$dating.max,
+      group = tmp_data$group,
+      color = tmp_data$color[-1],
+      source = rep("none", nrow(tmp_data))
+    ),
+    "length"
+  )
+
+  expect_error(
+    make_chrongler_periods(
+      name = tmp_data$values[-1],
+      start_date = tmp_data$dating.min[-c(1, 2, 3, 4, 5)],
+      end_date = tmp_data$dating.max[-c(5, 6)],
+      group = tmp_data$group[-c(3, 4, 5)],
+      color = tmp_data$color[-5],
+      source = rep("none", nrow(tmp_data))
+    ),
+    "length"
+  )
 })
 
 
@@ -127,10 +245,11 @@ test_that("a chrongler_period can be coerced to vector", {
   expect_identical(res, exp)
 })
 
+
 test_that("a list of chrongler_periods can be coerced to matrix", {
   tmp <- list(
-    new_chrongler_period("Classical", 100, 200),
-    new_chrongler_period("Hellenistic", 200, 300)
+    new_chrongler_period("One", 100, 200),
+    new_chrongler_period("Two", 200, 300)
   )
   res <- as.matrix(tmp)
   expect_type(res, "character")
@@ -151,5 +270,20 @@ test_that("two periods can be compared", {
   expect_true(later == later_sec)
   expect_false(later < earlier)
   expect_false(later == earlier)
+})
+
+test_that("print methods don't throw errors", {
+  capt <- capture.output(print(new_chrongler_period("Two", 200, 300)))
+  expect_true(any(grepl("chrongler_period", capt)))
+
+  capt <- capture.output(print(
+    new_chrongler_period("Two", 200, 300, source = "here")
+    ))
+  expect_true(any(grepl("Source", capt)))
+
+  capt <- capture.output(print(
+    new_chrongler_period("Two", 200, 300, color = "here")
+  ))
+  expect_true(any(grepl("Color", capt)))
 })
 

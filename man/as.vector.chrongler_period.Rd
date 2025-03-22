@@ -15,6 +15,7 @@
 A character vector with the values from the \code{chrongler_period} object.
 }
 \description{
-This function coerces a \code{chrongler_period} object into a character vector. It is dispatched
-when \code{as.vector} is called on an object of class \code{chrongler_period}.
+This function coerces a \code{chrongler_period} object into a character vector.
+It is dispatched when \code{as.vector} is called on an object of
+class \code{chrongler_period}.
 }

@@ -18,13 +18,16 @@ make_chrongler_periods(
 This must be a single string. (Or: In \code{\link[=make_chrongler_periods]{make_chrongler_periods()}} a vector.)}
 
 \item{start_date}{A numeric value representing the start date of the period.
-It must be numeric and less than the end date. Negative values for dates BCE. (Or: In \code{\link[=make_chrongler_periods]{make_chrongler_periods()}} a vector.)}
+It must be numeric and less than the end date. Negative values for dates BCE.
+(Or: In \code{\link[=make_chrongler_periods]{make_chrongler_periods()}} a vector.)}
 
 \item{end_date}{A numeric value representing the end date of the period.
-It must be numeric and greater than the start date. Negative values for dates BCE. (Or: In \code{\link[=make_chrongler_periods]{make_chrongler_periods()}} a vector.)}
+It must be numeric and greater than the start date. Negative values for dates BCE.
+(Or: In \code{\link[=make_chrongler_periods]{make_chrongler_periods()}} a vector.)}
 
 \item{group}{(Optional) A character string representing the group to which
-this period belongs. If not provided, the period name is used as the group. (Or: In \code{\link[=make_chrongler_periods]{make_chrongler_periods()}} a vector.)}
+this period belongs. If not provided, the period name is used as the group.
+(Or: In \code{\link[=make_chrongler_periods]{make_chrongler_periods()}} a vector.)}
 
 \item{color}{(Optional) A character string representing the color
 associated with this period (e.g., a hex color code). (Or: In \code{\link[=make_chrongler_periods]{make_chrongler_periods()}} a vector.)}
