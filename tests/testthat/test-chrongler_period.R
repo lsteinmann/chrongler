@@ -214,8 +214,9 @@ test_that("error if vectors are not same length", {
 
 test_that("multiple periods are processed with warning", {
   tmp_data <- test_data[-19, ]
+  tmp_data <- tmp_data[-which(tmp_data$period == ""), ]
   res <- make_chrongler_periods(
-    name = tmp_data$values,
+    name = tmp_data$period,
     start_date = tmp_data$dating.min,
     end_date = tmp_data$dating.max
   )
@@ -286,4 +287,3 @@ test_that("print methods don't throw errors", {
   ))
   expect_true(any(grepl("Color", capt)))
 })
-

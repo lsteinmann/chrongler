@@ -75,9 +75,8 @@ new_chrongler_period <- function(
     ) stop("start_date and end_date must be numeric")
   if (start_date >= end_date) stop("start_date must be less than end_date")
 
-  if (is.null(group) || group == "" || is.na(group)) {
-    # TODO: I should probably not do that at all!
-    group <- name  # Assign period as its own group if none provided
+  if (is.null(group)) {
+    group <- NA
   }
 
   structure(
@@ -265,7 +264,7 @@ make_chrongler_periods <- function(
           )
         )
       }, error = function(e) {
-        warning(paste0("Errors for period: ", name))
+        warning(paste0("Errors for period: ", name, "; Error: ", e))
         return(NA)
       })
     }, name, start_date, end_date, group, color, source,

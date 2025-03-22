@@ -4,7 +4,7 @@
 \alias{print.chrongler.conc}
 \title{Print method for 'chrongler.conc' class}
 \usage{
-\method{print}{chrongler.conc}(conc)
+\method{print}{chrongler.conc}(x, ...)
 }
 \arguments{
 \item{conc}{A 'chrongler.conc' object, which is a list that includes
