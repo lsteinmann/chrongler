@@ -42,13 +42,13 @@
 #' filename <- system.file(package = "chrongler",
 #'                     "extdata/2023_periods_grouping_example.csv")
 #' conc <- make_chrongler_conc(filename)
-#' str(conc)
+#' print(conc)
 #'
 #' filename <- system.file(package = "chrongler",
 #'                     "extdata/2023_periods_grouping_example.csv")
 #' table <- read.csv(filename)
 #' conc <- make_chrongler_conc(table)
-#' str(conc)
+#' print(conc)
 #' }
 make_chrongler_conc <- function(file,
                                 cols = list(group = NA, values = NA,
@@ -173,7 +173,55 @@ make_chrongler_conc <- function(file,
                color = colors,
                source = sources)
 
-  class(conc) <- c("list", "chrongler.conc")
+  # Assign the class
+  class(conc) <- c("chrongler.conc", class(conc))
 
   return(conc)
+}
+
+#' Print method for 'chrongler.conc' class
+#'
+#' @description
+#' A custom print method for the 'chrongler.conc' class that displays
+#' information about the concordance, including group and period order
+#' and the chronological range. It also reports how many `NA` values are
+#' present in the chronological range data.
+#'
+#' @param conc A 'chrongler.conc' object, which is a list that includes
+#'        concordance data such as group orders, period orders, and dating information.
+#'
+#' @details
+#' This function prints:
+#'  - The group order and period order of the concordance.
+#'  - The range of dates for the periods, excluding `NA` values.
+#'  - The number of `NA` values in the chronological data.
+#'
+#' If there are no valid chronological values, a message indicating that
+#' no valid chronological range is available is printed.
+#'
+#' @examples
+#' \dontrun{
+#' # Assuming `conc` is a 'chrongler.conc' object
+#' print(conc)
+#' }
+#'
+#' @export
+print.chrongler.conc <- function(conc) {
+  cat("Chrongler Concordance with",
+      length(conc$period.order), "periods in",
+      length(conc$group.order), "groups.\n")
+  cat("Group Order:\n")
+  print(conc$group.order)
+  cat("\nPeriod Order:\n")
+  print(conc$period.order)
+  cat("\nChronological Range:\n")
+  chron <- sapply(conc$dating, function(x) c(x$from, x$to))
+  chron <- unlist(chron)
+  # If there are valid dating values, calculate the range
+  if (length(chron) > sum(is.na(chron))) {
+    cat("\nRange of dates (missing ", sum(is.na(chron)), "values):\n")
+    print(range(chron, na.rm = TRUE))
+  } else {
+    cat("No valid chronological range available.\n")
+  }
 }
