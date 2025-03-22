@@ -44,7 +44,8 @@
 #' conc <- make_chrongler_conc(filename)
 #' str(conc)
 #'
-#' filename <- system.file(package = "chrongler", "extdata/2023_periods_grouping_example.csv")
+#' filename <- system.file(package = "chrongler",
+#'                     "extdata/2023_periods_grouping_example.csv")
 #' table <- read.csv(filename)
 #' conc <- make_chrongler_conc(table)
 #' str(conc)
@@ -60,10 +61,10 @@ make_chrongler_conc <- function(file,
     if (all(file.exists(file)) & all(grepl("csv", file))) {
       data <- read.csv(file)
     } else {
-      stop("`chrongler_conc()` needs a data.frame, matrix or path to an existing csv-file.")
+      stop("`make_chrongler_conc()` needs a data.frame, matrix or path to an existing csv-file.")
     }
   } else {
-    stop("`chrongler_conc()` cannot handle the value supplied as 'file'.")
+    stop("`make_chrongler_conc()` cannot handle the value supplied as 'file'.")
   }
 
   for (i in seq_along(cols)) {
