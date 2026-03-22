@@ -8,17 +8,15 @@ Authors@R:
 Author: Lisa Steinmann
 Maintainer: Lisa Steinmann <lisa.steinmann@rub.de>
 Description: Dealing with archaeological or historical chronological data 
-    can be time consuming. chrongler provides convenience functions the 
+    can be time consuming. chrongler provides convenience functions that 
     help reformat or 'wrangle' data were chronological
     information is stored as a 'period' (categorical values that may
     indicate chronology in one way or another). 
 License: GPL (>= 3)
 Depends: 
-    R (>= 3.3),
-    jsonlite
+    R (>= 3.5)
 Suggests: 
     covr,
-    dplyr,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
@@ -26,5 +24,5 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 VignetteBuilder: knitr
