@@ -9,8 +9,10 @@
 #'    be returned as an ordered factor according to this order.
 #'
 #'
-#' @param file chr / data.frame / matrix
-#' @param cols list with specific values and column names or Indices, see description.
+#' @param file chr / data.frame: Path to a *csv*-file to be read
+#'  by [read.csv()], or a `data.frame`.
+#' @param cols List with specific values and column names or Indices, see Details.
+#' @param ... Further arguments to be passed to [read.csv()] when `file` is a path.
 #'
 #'
 #' @details
@@ -52,18 +54,18 @@
 make_chrongler_conc <- function(file,
                                 cols = list(group = NA, values = NA,
                                             dating.min = NA, dating.max = NA,
-                                            color = NA, source = NA)) {
+                                            color = NA, source = NA),
+                                ...) {
 
-  if (is.data.frame(file) | is.matrix(file)) {
+  if (is.data.frame(file)) {
+    # Doing this to strip other classes that inherit from data.frame just in
+    # case they would behave differently, e.g. tibble.
     data <- as.data.frame(file)
-  } else if (all(is.character(file))) {
-    if (all(file.exists(file)) & all(grepl("csv", file))) {
-      data <- read.csv(file)
-    } else {
-      stop("`chrongler_conc()` needs a data.frame, matrix or path to an existing csv-file.")
-    }
+  } else if (length(file) == 1 && is.character(file)) {
+    # No additional error handling for read.csv, it can fail on its own.
+    data <- read.csv(file, ...)
   } else {
-    stop("`chrongler_conc()` cannot handle the value supplied as 'file'.")
+    stop("`make_chrongler_conc()` needs a `data.frame` or the path to a csv-file.")
   }
 
   for (i in seq_along(cols)) {
@@ -83,6 +85,7 @@ make_chrongler_conc <- function(file,
                       collapse = ", "), " not found."))
   }
 
+  # Coerce to numeric?
   num_min <- all(is.numeric(data[, cols$dating.min]))
   num_max <- all(is.numeric(data[, cols$dating.max]))
   if(num_min == FALSE | num_max == FALSE) {

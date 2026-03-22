@@ -7,13 +7,17 @@
 make_chrongler_conc(
   file,
   cols = list(group = NA, values = NA, dating.min = NA, dating.max = NA, color = NA,
-    source = NA)
+    source = NA),
+  ...
 )
 }
 \arguments{
-\item{file}{chr / data.frame / matrix}
+\item{file}{chr / data.frame: Path to a \emph{csv}-file to be read
+by \code{\link[=read.csv]{read.csv()}}, or a \code{data.frame}.}
 
-\item{cols}{list with specific values and column names or Indices, see description.}
+\item{cols}{List with specific values and column names or Indices, see Details.}
+
+\item{...}{Further arguments to be passed to \code{\link[=read.csv]{read.csv()}} when \code{file} is a path.}
 }
 \value{
 A list.

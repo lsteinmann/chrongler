@@ -1,38 +1,33 @@
-test_that("no failure on file name", {
-  filename <- system.file(package = "chrongler",
-                          "extdata/2023_periods_grouping_example.csv")
-  expect_true(inherits(make_chrongler_conc(filename), "chrongler.conc"))
-})
+# Tests for make_chrongler_conc(), from: make_chrongler_conc.R
 
-test_that("no failure on df", {
-  filename <- system.file(package = "chrongler",
-                          "extdata/2023_periods_grouping_example.csv")
-  df <- read.csv(filename)
-  expect_true(inherits(make_chrongler_conc(df), "chrongler.conc"))
-})
-
-test_that("no failure on matrix", {
-  filename <- system.file(package = "chrongler",
-                          "extdata/2023_periods_grouping_example.csv")
-  mat <- as.matrix(read.csv(filename))
-  expect_true(inherits(suppressWarnings(make_chrongler_conc(mat)),
-                       "chrongler.conc"))
-})
-
-test_that("failure on something else", {
-  vec <- c(1, 2, 3)
-  expect_error(make_chrongler_conc(vec), "file")
+test_that("accepts only data.frame if not filepath", {
+  data("RomanPeriods")
+  expect_true(inherits(make_chrongler_conc(RomanPeriods), "chrongler.conc"))
+  tmp <- as.matrix(RomanPeriods)
+  expect_error(make_chrongler_conc(tmp), "data.frame")
+  tmp <- as.list(RomanPeriods)
+  expect_error(make_chrongler_conc(tmp), "data.frame")
+  tmp <- c(1, 2, 3)
+  expect_error(make_chrongler_conc(tmp), "data.frame")
   list <- list("1" = 1, "2" = "A", "3" = "bla")
-  expect_error(make_chrongler_conc(list), "file")
+  expect_error(make_chrongler_conc(tmp), "data.frame")
+  tmp <- c("one", "two", "three")
+  expect_error(make_chrongler_conc(tmp), "data.frame")
 })
 
-test_that("failure on no file or no csv", {
-  file <- "this/is/no/file.csv"
-  expect_error(make_chrongler_conc(file), "file")
-  file <- tempfile(fileext = ".txt")
-  writeLines(c("txt"), file)
-  expect_error(make_chrongler_conc(file), "file")
+test_that("lets read.csv() fail if it wants to", {
+  filename <- "./this/does/not/exist.csv"
+  expect_error(suppressWarnings(make_chrongler_conc(filename)))
 })
+
+test_that("passes additional arguments to read.csv()", {
+  filename <- "./this/does/not/exist.csv"
+  response <- try(suppressWarnings(
+    make_chrongler_conc(filename, fileEncoding = "test")),
+    silent = TRUE)
+  expect_true(grepl("fileEncoding", response))
+})
+
 
 test_that("error when columns dont exist", {
   test <- data.frame("grs" = c("A", "A", "B"),
