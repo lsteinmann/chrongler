@@ -4,15 +4,15 @@
 \alias{missing_periods}
 \title{Check for and Return Periods not Present in the Concordance}
 \usage{
-missing_periods(period_vec, possible_periods)
+missing_periods(present_periods, possible_periods)
 }
 \arguments{
-\item{period_vec}{A vector of values to check for}
+\item{present_periods}{A vector of values to check for}
 
 \item{possible_periods}{The vector of values against which to check}
 }
 \value{
-a character vector with the values from \code{period_vec} not present
+a character vector with the values from \code{present_periods} not present
 in \code{possible_periods}, or \code{character(0)} if all are present.
 }
 \description{

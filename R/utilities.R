@@ -36,17 +36,17 @@ colnames_to_index <- function(colnames, columns) {
 
 #' Check for and Return Periods not Present in the Concordance
 #'
-#' @param period_vec A vector of values to check for
+#' @param present_periods A vector of values to check for
 #' @param possible_periods The vector of values against which to check
 #'
-#' @return a character vector with the values from `period_vec` not present
+#' @return a character vector with the values from `present_periods` not present
 #' in `possible_periods`, or `character(0)` if all are present.
 #'
 #' @keywords internal
-missing_periods <- function(period_vec, possible_periods) {
-  exists <- period_vec %in% possible_periods
+missing_periods <- function(present_periods, possible_periods) {
+  exists <- present_periods %in% possible_periods
   if (any(exists == FALSE)) {
-    not_found <- period_vec[!exists]
+    not_found <- present_periods[!exists]
     msg <- paste("Periods not found in concordance:", paste(not_found, collapse = ", "))
     warning(msg)
     return(unique(not_found))

@@ -68,9 +68,9 @@ derive_dating <- function(data, conc,
   }
 
   not_found <- unique(
-    missing_periods(period_vec = data[, start],
+    missing_periods(present_periods = data[, start],
                     possible_periods = names(conc$dating)),
-    missing_periods(period_vec = data[, end],
+    missing_periods(present_periods = data[, end],
                     possible_periods = names(conc$dating))
   )
 
