@@ -150,10 +150,28 @@ test_that("$color has correct structure", {
   expect_named(roman_conc$color, roman_df$values)
 })
 
+test_that("single $color is present in $all", {
+  color <- roman_df[1,"color"]
+  roman_conc <- make_chrongler_conc(roman_df)
+  expect_identical(
+    roman_conc$all$`Roman Republic`$color,
+    color
+  )
+})
+
 test_that("$source is present", {
   roman_conc <- make_chrongler_conc(roman_df)
   # source not supplied - should exist but be empty/NULL per period
   expect_true("source" %in% names(roman_conc))
+})
+
+test_that("single $source is present in $all", {
+  roman_df$source <- rep("A source", nrow(roman_df))
+  roman_conc <- make_chrongler_conc(roman_df)
+  expect_identical(
+    roman_conc$all$`Roman Republic`$source,
+    "A source"
+  )
 })
 
 test_that("chronological order is preserved", {

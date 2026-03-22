@@ -239,8 +239,8 @@ make_chrongler_conc <- function(file,
            from = data[ind, cols$dating.min],
            to = data[ind, cols$dating.max]
          ),
-         color = unname(colors),
-         source = unname(sources)
+         color = unname(colors[ind]),
+         source = unname(sources[ind])
     )
   })
   if (length(all) > 0) {

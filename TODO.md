@@ -8,7 +8,6 @@
 - derive period could drop data?
 
 # Tests
-- make_chrongler_conc (has tests, but need to check)
 - derive_dating	(no tests)
 - derive_period	(no tests)
 - group_periods	(no tests)
