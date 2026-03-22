@@ -15,12 +15,51 @@ make_chrongler_conc(
 \item{file}{chr / data.frame: Path to a \emph{csv}-file to be read
 by \code{\link[=read.csv]{read.csv()}}, or a \code{data.frame}.}
 
-\item{cols}{List with specific values and column names or Indices, see Details.}
+\item{cols}{A named list mapping expected column roles to the corresponding
+column names (chr) or indices (int) in \code{file}. The following names are
+recognised:
+\itemize{
+\item \strong{group} : column containing the period group names
+\item \strong{values} : column containing all period names, in chronological order
+\item \strong{dating.min} : column containing the earliest absolute date for the
+respective period (negative = BCE, positive = CE)
+\item \strong{dating.max} : column containing the latest absolute date for the
+respective period (negative = BCE, positive = CE)
+\item \strong{color} \emph{(optional)} : column containing a colour value per period
+\item \strong{source} \emph{(optional)} : column containing a source reference per period
+}
+
+If your column names already match the names above, you can omit this
+argument entirely and they will be detected automatically.}
 
 \item{...}{Further arguments to be passed to \code{\link[=read.csv]{read.csv()}} when \code{file} is a path.}
 }
 \value{
-A list.
+A named list of class \code{chrongler.conc} with the following elements:
+\itemize{
+\item \strong{all} — a named list with one entry per period (including group-level
+periods). Each entry contains:
+\itemize{
+\item \code{name} — the period name (chr)
+\item \code{group} — the group this period belongs to (chr)
+\item \code{dating} — a list with \code{from} and \code{to} absolute dates (num)
+\item \code{color} — the associated colour value (chr), or \code{NULL} if not supplied
+\item \code{source} — the associated source reference, or \code{NULL} if not supplied
+}
+\item \strong{grouped} — a named list with one entry per group. Each entry is an
+ordered factor of the periods belonging to that group, in chronological
+order.
+\item \strong{group.order} — an ordered factor of all group names, in chronological
+order.
+\item \strong{period.order} — an ordered factor of all non-group period names, in
+chronological order.
+\item \strong{dating} — a named list with one \code{list(from, to)} entry per period,
+including group-level periods.
+\item \strong{color} — a named character vector of colour values, one per period.
+\item \strong{source} — a named list of source references, one per period.
+}
+
+This class is used by all other \code{chrongler} functions to process data.
 }
 \description{
 The csv-file or data.frame you supply should contain containing two columns: the first column
@@ -28,38 +67,21 @@ should list all period-"groups", e.g. 'Roman Imperial Period', and the
 second one should list all the corresponding periods, e.g.
 'Early Imperial', ..., 'Late Imperial' and so forth. The grouping
 data.frame should be in chronological order, because the results will
-be returned as an ordered factor according to this order.
-}
-\details{
-If the column names of your provided csv file or data.frame already
-conform to the following logic, you can omit the \code{cols}-argument altogether.
-If not, you need to provide the a list in the following format to \code{cols}:
-\itemize{
-\item \strong{groups} (\emph{chr/int}) Name or Index of the column that contains
-the grouping variable.
-\item \strong{values} (\emph{chr/int}) Name or Index of the column that contains
-all period names. These are expected to be in chronological order!
-\item \strong{dating.min} (\emph{chr/int}) Name or Index of the column that contains
-the minimum / 'from' absolute date for each period.
-Expects negative values for BCE and positive values for CE.
-\item \strong{dating.max} (\emph{chr/int}) Name or Index of the column that contains
-the maximum / 'to' absolute date for each period.
-Expects negative values for BCE and positive values for CE.
-\item \strong{color} (\emph{chr/int}) Name or Index of the column that contains
-the color associated with each value for consistent
-color scales in plots.
-}
+be returned as an ordered factor according to this order.#'
 }
 \examples{
-\dontrun{
 filename <- system.file(package = "chrongler",
                     "extdata/2023_periods_grouping_example.csv")
 conc <- make_chrongler_conc(filename)
 str(conc)
 
-filename <- system.file(package = "chrongler", "extdata/2023_periods_grouping_example.csv")
-table <- read.csv(filename)
-conc <- make_chrongler_conc(table)
+data("RomanPeriods")
+df <- RomanPeriods
+conc <- make_chrongler_conc(df)
 str(conc)
 }
+\seealso{
+The "chrongler wrangles categorical chronological data" vignette
+for a detailed explanation of the expected data structure:
+\code{vignette("chrongler_workflow", package = "chrongler")}
 }

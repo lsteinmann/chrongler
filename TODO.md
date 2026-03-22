@@ -4,7 +4,6 @@
 - Documentation of all functions
 
 # Bugs
-- grep() in column detection is not cool.
 - try-error catch thing in derive_period
 - derive period could drop data?
 

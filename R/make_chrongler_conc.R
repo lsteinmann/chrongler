@@ -6,51 +6,67 @@
 #'    second one should list all the corresponding periods, e.g.
 #'    'Early Imperial', ..., 'Late Imperial' and so forth. The grouping
 #'    data.frame should be in chronological order, because the results will
-#'    be returned as an ordered factor according to this order.
+#'    be returned as an ordered factor according to this order.#'
 #'
 #'
 #' @param file chr / data.frame: Path to a *csv*-file to be read
 #'  by [read.csv()], or a `data.frame`.
-#' @param cols List with specific values and column names or Indices, see Details.
+#' @param cols A named list mapping expected column roles to the corresponding
+#'   column names (chr) or indices (int) in `file`. The following names are
+#'   recognised:
+#'   * **group** : column containing the period group names
+#'   * **values** : column containing all period names, in chronological order
+#'   * **dating.min** : column containing the earliest absolute date for the
+#'    respective period (negative = BCE, positive = CE)
+#'   * **dating.max** : column containing the latest absolute date for the
+#'    respective period (negative = BCE, positive = CE)
+#'   * **color** _(optional)_ : column containing a colour value per period
+#'   * **source** _(optional)_ : column containing a source reference per period
+#'
+#'   If your column names already match the names above, you can omit this
+#'   argument entirely and they will be detected automatically.
 #' @param ... Further arguments to be passed to [read.csv()] when `file` is a path.
 #'
+#' @return A named list of class `chrongler.conc` with the following elements:
+#'   * **all** — a named list with one entry per period (including group-level
+#'     periods). Each entry contains:
+#'     * `name` — the period name (chr)
+#'     * `group` — the group this period belongs to (chr)
+#'     * `dating` — a list with `from` and `to` absolute dates (num)
+#'     * `color` — the associated colour value (chr), or `NULL` if not supplied
+#'     * `source` — the associated source reference, or `NULL` if not supplied
+#'   * **grouped** — a named list with one entry per group. Each entry is an
+#'     ordered factor of the periods belonging to that group, in chronological
+#'     order.
+#'   * **group.order** — an ordered factor of all group names, in chronological
+#'     order.
+#'   * **period.order** — an ordered factor of all non-group period names, in
+#'     chronological order.
+#'   * **dating** — a named list with one `list(from, to)` entry per period,
+#'     including group-level periods.
+#'   * **color** — a named character vector of colour values, one per period.
+#'   * **source** — a named list of source references, one per period.
 #'
-#' @details
-#' If the column names of your provided csv file or data.frame already
-#' conform to the following logic, you can omit the `cols`-argument altogether.
-#' If not, you need to provide the a list in the following format to `cols`:
-#'  * **groups** (_chr/int_) Name or Index of the column that contains
-#'      the grouping variable.
-#'  * **values** (_chr/int_) Name or Index of the column that contains
-#'      all period names. These are expected to be in chronological order!
-#'  * **dating.min** (_chr/int_) Name or Index of the column that contains
-#'      the minimum / 'from' absolute date for each period.
-#'      Expects negative values for BCE and positive values for CE.
-#'  * **dating.max** (_chr/int_) Name or Index of the column that contains
-#'      the maximum / 'to' absolute date for each period.
-#'      Expects negative values for BCE and positive values for CE.
-#'  * **color** (_chr/int_) Name or Index of the column that contains
-#'      the color associated with each value for consistent
-#'      color scales in plots.
+#' This class is used by all other `chrongler` functions to process data.
 #'
+#' @seealso The "chrongler wrangles categorical chronological data" vignette
+#'   for a detailed explanation of the expected data structure:
+#'   \code{vignette("chrongler_workflow", package = "chrongler")}
 #'
-#' @return A list.
 #' @export
 #'
 #' @importFrom utils read.csv
 #'
 #' @examples
-#' \dontrun{
 #' filename <- system.file(package = "chrongler",
 #'                     "extdata/2023_periods_grouping_example.csv")
 #' conc <- make_chrongler_conc(filename)
 #' str(conc)
 #'
-#' filename <- system.file(package = "chrongler", "extdata/2023_periods_grouping_example.csv")
-#' table <- read.csv(filename)
-#' conc <- make_chrongler_conc(table)
+#' data("RomanPeriods")
+#' df <- RomanPeriods
+#' conc <- make_chrongler_conc(df)
 #' str(conc)
-#' }
 make_chrongler_conc <- function(file,
                                 cols = list(group = NA, values = NA,
                                             dating.min = NA, dating.max = NA,
@@ -68,21 +84,55 @@ make_chrongler_conc <- function(file,
     stop("`make_chrongler_conc()` needs a `data.frame` or the path to a csv-file.")
   }
 
-  for (i in seq_along(cols)) {
-    if (is.na(cols[[i]])) {
-      cols[[i]] <- grep(names(cols[i]), colnames(data))
+  mandatory_columns <- c("values", "group", "dating.min", "dating.max")
+  optional_columns <- c("color", "source")
+  df_cols <- colnames(data)
+
+  if (!is.list(cols)) {
+    stop("`cols` should be a list of column names or indices, see ?make_chrongler_conc")
+  }
+
+  unknown <- setdiff(names(cols), c(mandatory_columns, optional_columns))
+  if (length(unknown) > 0) {
+    warning("Unknown names in `cols` will be ignored: ", paste(unknown, collapse = ", "))
+  }
+
+  # With this I try to catch all possible cases. People adding only a few
+  # columns to this list, because the rest have the correct names, people
+  # using the default list...
+  for (col in c(mandatory_columns, optional_columns)) {
+    # If the value in `cols` is set to NA, I assume that it is the default
+    # list and thus will not use the value from this list but set the column
+    # name to look from from the default column name. If the name is not
+    # in the cols list, I won't be able to use it either, so same in that case.
+    use_value_from_cols_list <- col %in% names(cols) && !is.na(cols[[col]])
+    if (use_value_from_cols_list) {
+      column_name <- cols[[col]]
+    } else {
+      column_name <- col
     }
-    if (is.character(cols[[i]])) {
-      cols[[i]] <- colnames_to_index(colnames(data), cols[[i]])
+    if (col %in% mandatory_columns) {
+      # This will stop() if it cannot find the column.
+      cols[[col]] <- colnames_to_index(colnames = df_cols, columns = column_name)
+    } else {
+      # We do not want to stop() for the optional columns, so we work around
+      # the error message we can expect from colnames_to_index() if the column
+      # does not exist.
+      maybe_column <- try(colnames_to_index(colnames = df_cols,
+                                            columns = column_name),
+                          silent = TRUE)
+      cols[[col]] <- if (inherits(maybe_column, "try-error")) NA else maybe_column
     }
   }
-  missing <- unlist(lapply(cols, function(x) length(x) == 0))
-  missing <- names(missing)[missing]
-  mandatory <- c("values", "group", "dating.min", "dating.max")
-  if (any(missing %in% mandatory)) {
-    stop(paste0("Mandatory columns: ",
-                paste(match.arg(missing, mandatory, several.ok = TRUE),
-                      collapse = ", "), " not found."))
+
+  # Now this part should actually never be reached, since we fail up there
+  # already - We will see.
+  missing <- sapply(cols, is.na)
+  missing <- names(missing[missing])
+  if (any(missing %in% mandatory_columns)) {
+    stop(paste0("Mandatory columns: '",
+                paste0(missing[is.element(missing, mandatory_columns)],
+                       collapse = "', '"), "' not found."))
   }
 
   # Coerce to numeric?
@@ -101,19 +151,21 @@ make_chrongler_conc <- function(file,
   groups <- unique(data[, cols$group])
   values <- data[, cols$values]
 
-  colors <- data[, cols$color]
-  if (length(colors) > 0) {
-    names(colors) <- data[, cols$values]
+  # Optional columns:
+  if (is.na(cols$color)) {
+    colors <- rep(NA, nrow(data))
   } else {
-    colors <- rep(NA, length(data))
+    colors <- data[, cols$color]
   }
+  names(colors) <- data[, cols$values]
 
-  sources <- data[, cols$source]
-  if (length(sources) > 0) {
-    names(sources) <- data[, cols$values]
+  if (is.na(cols$source)) {
+    sources <- rep(NA, nrow(data))
   } else {
-    sources <- rep(NA, length(data))
+    sources <- data[, cols$source]
   }
+  names(sources) <- data[, cols$values]
+
 
   grouped <- lapply(groups, function (per_group) {
     ind <- which(data[, cols$group] == per_group)
@@ -159,8 +211,8 @@ make_chrongler_conc <- function(file,
            from = data[ind, cols$dating.min],
            to = data[ind, cols$dating.max]
          ),
-         color = data[ind, cols$color],
-         source = data[ind, cols$source]
+         color = unname(colors),
+         source = unname(sources)
     )
   })
   if (length(all) > 0) {
