@@ -44,8 +44,8 @@ derive_dating <- function(data, conc,
 
   stopifnot(inherits(conc, "chrongler.conc"))
 
-  start <- colnames_to_index(colnames(data), start)
-  end <- colnames_to_index(colnames(data), end)
+  start <- colnames_to_index(colnames = colnames(data), columns = start)
+  end <- colnames_to_index(colnames = colnames(data), columns = end)
 
   dating.min <- try(colnames_to_index(colnames(data),
                                       dating.min),
@@ -53,10 +53,6 @@ derive_dating <- function(data, conc,
   dating.max <- try(colnames_to_index(colnames(data),
                                       dating.max),
                     silent = TRUE)
-
-  if (length(start) == 0 | length(end) == 0) {
-    stop("Cannot identify start and end columns.")
-  }
 
   if (inherits(dating.min, "try-error")) {
     data$dating.min <- NA
