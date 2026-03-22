@@ -19,10 +19,9 @@ derive_period(
 \item{data}{A data.frame containing at least two columns with the
 start and end period for each row. Columns can be specified in the relevant
 arguments. The values in the start and end period need to correspond with
-the relevant values in the correspondence object used
-(see \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}).}
+the relevant values in the concordance used (see \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}).}
 
-\item{conc}{A concordance list build by \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}.}
+\item{conc}{A \code{chrongler.conc}-list built by \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}.}
 
 \item{dating.min}{chr/int}
 

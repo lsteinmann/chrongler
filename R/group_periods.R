@@ -8,11 +8,10 @@
 #' @param data A data.frame containing at least two columns with the
 #'  start and end period for each row. Columns can be specified in the relevant
 #'  arguments. The values in the start and end period need to correspond with
-#'  the relevant values in the correspondence object used
-#'  (see [make_chrongler_conc()]).
-#' @param conc A concordance list build by [make_chrongler_conc()].
-#' @param start *chr/int*. Name or index of the column with the **minimum period**.
-#' @param end *chr/int*. Name or index of the column with the **maximum period**.
+#'  the relevant values in the concordance used (see [make_chrongler_conc()]).
+#' @param conc A `chrongler.conc`-list built by [make_chrongler_conc()].
+#' @param start *chr/int*. Name or index of the column with the **earliest period**.
+#' @param end *chr/int*. Name or index of the column with the **latest period**.
 #'
 #'
 #' @seealso [make_chrongler_conc()]

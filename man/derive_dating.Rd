@@ -10,29 +10,28 @@ derive_dating(data, conc, start, end, dating.min, dating.max)
 \item{data}{A data.frame containing at least two columns with the
 start and end period for each row. Columns can be specified in the relevant
 arguments. The values in the start and end period need to correspond with
-the relevant values in the correspondence object used
-(see \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}).}
+the relevant values in the concordance used (see \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}).}
 
-\item{conc}{A concordance list build by \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}.}
+\item{conc}{A \code{chrongler.conc}-list built by \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}.}
 
-\item{start}{\emph{chr/int}. Name or index of the column with the \strong{minimum period}.}
+\item{start}{\emph{chr/int}. Name or index of the column with the \strong{earliest period}.}
 
-\item{end}{\emph{chr/int}. Name or index of the column with the \strong{maximum period}.}
+\item{end}{\emph{chr/int}. Name or index of the column with the \strong{latest period}.}
 
-\item{dating.min}{\emph{chr/int}. Name or index of a pre-existing column
+\item{dating.min}{\emph{chr/int}, \emph{optional}. Name or index of a pre-existing column
 containing absolute \strong{minimum dating}. If it does exist, this function will
-only fill cells that were previously empty. A comment is stored in a
+only fill cells that were previously empty (\code{NA}). A comment is stored in a
 column called \emph{dating.source}. If this argument is left empty and a \emph{dating.min}
 column already exists, it will be overwritten.}
 
-\item{dating.max}{\emph{chr/int}. Name or index of a pre-existing column
+\item{dating.max}{\emph{chr/int}, \emph{optional}. Name or index of a pre-existing column
 containing absolute \strong{maximum dating}. If it does exist, this function will
-only fill cells that were previously empty. A comment is stored in a
+only fill cells that were previously empty (\code{NA}). A comment is stored in a
 column called \emph{dating.source}. If this argument is left empty and a \emph{dating.max}
 column already exists, it will be overwritten.}
 }
 \value{
-A data.frame, with absolute values in the \code{dating.min} and
+A data.frame, with numeric values in the \code{dating.min} and
 \code{dating.max} columns and a comment in \code{dating.source} (see description).
 }
 \description{
@@ -48,10 +47,8 @@ A comment informing of the procedure is written to a column called
 }
 \examples{
 data("BuildingsMilet")
-
-filename <- system.file(package = "chrongler",
-                       "extdata/2023_periods_grouping_example.csv")
-conc <- make_chrongler_conc(filename)
+data("PeriodsMilet")
+conc <- make_chrongler_conc(PeriodsMilet)
 
 derive_dating(BuildingsMilet, conc, start = "period.start", end = "period.end")
 }
