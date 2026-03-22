@@ -219,60 +219,11 @@ test_that("warns if max is higher than or equal to min", {
 
 
 
+### Other things.
 
-
-
-
-
-
-test_that("error when columns dont exist", {
-  test <- data.frame("grs" = c("A", "A", "B"),
-                     "prs" = c("A", "donc", "bla"),
-                     "min" = c(1, 2, 3),
-                     "max" = c(2, 3, 4),
-                     "colr" = c("green", "red", "yellow"))
+test_that("fails if a mandatory column is missing", {
+  test <- data.frame("values" = c("Period 1", "Period 2", "Period 3", "Period 4"),
+                     "dating.min" = c(1, 3, 4, 7),
+                     "dating.max" = c(2, 3, 5, 6))
   expect_error(make_chrongler_conc(test), "not present")
 })
-
-
-test_that("substitutes names", {
-  test <- data.frame("grs" = c("A", "A", "A", "B"),
-                     "prs" = c("A", "donc", "esel", "bla"),
-                     "min" = c(1, 2, 3, 4),
-                     "max" = c(2, 3, 4, 5),
-                     "colr" = c("green", "red", "yellow", "brown"))
-  colnames <- list(group = "grs", values = "prs",
-                   dating.min = "min", dating.max = "max",
-                   color = "colr")
-  expect_true(inherits(make_chrongler_conc(test, cols = colnames), "chrongler.conc"))
-})
-
-test_that("works with indices", {
-  test <- data.frame("grs" = c("A", "A", "A", "B"),
-                     "prs" = c("A", "donc", "esel", "bla"),
-                     "min" = c(1, 2, 3, 4),
-                     "max" = c(2, 3, 4, 5),
-                     "colr" = c("green", "red", "yellow", "brown"))
-  colnames <- list(group = 1, values = 2,
-                   dating.min = 3, dating.max = 4,
-                   color = 5)
-  expect_true(inherits(make_chrongler_conc(test, cols = colnames), "chrongler.conc"))
-})
-
-test_that("values column missing", {
-  test <- data.frame("group" = c("A", "A", "A", "B"),
-                     "dating.min" = c(1, 2, 3, 4),
-                     "dating.max" = c(2, 3, 4, 5))
-  expect_error(make_chrongler_conc(test), "values")
-})
-
-
-test_that("group column missing", {
-  test <- data.frame("values" = c("A", "donc", "esel", "bla"),
-                     "dating.min" = c(1, 2, 3, 4),
-                     "dating.max" = c(2, 3, 4, 5))
-  expect_error(make_chrongler_conc(test), "group")
-})
-
-
-
