@@ -68,6 +68,7 @@
 #'
 #' @export
 #' @importFrom utils read.csv
+#' @importFrom stats na.omit
 #'
 #' @examples
 #' filename <- system.file(package = "chrongler",
