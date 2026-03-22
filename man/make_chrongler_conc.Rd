@@ -69,6 +69,11 @@ second one should list all the corresponding periods, e.g.
 data.frame should be in chronological order, because the results will
 be returned as an ordered factor according to this order.#'
 }
+\details{
+Warnings are supplied if the dating seems to be out of order. This happens
+if the value in \code{dating.max} is lower than or equal to the corresponding
+value in \code{dating.min}.
+}
 \examples{
 filename <- system.file(package = "chrongler",
                     "extdata/2023_periods_grouping_example.csv")

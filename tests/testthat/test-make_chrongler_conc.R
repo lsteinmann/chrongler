@@ -173,6 +173,52 @@ test_that("chronological order is preserved", {
 })
 
 
+## Dating - numeric
+test_that("warn and coerce if dating columns are not numeric", {
+  test <- data.frame("group" = c("Group A", "Group A", "Group A", "Group B"),
+                     "values" = c("Period 1", "Period 2", "Period 3", "Period 4"),
+                     "dating.min" = c("2", "2", "hello", "5"),
+                     "dating.max" = c(3, 4, 4, 6))
+  expect_warning(
+    expect_warning(make_chrongler_conc(test), "dating.min"),
+    "NAs"
+  )
+  test <- data.frame("group" = c("Group A", "Group A", "Group A", "Group B"),
+                     "values" = c("Period 1", "Period 2", "Period 3", "Period 4"),
+                     "dating.min" = c(0, 1, 2, 3),
+                     "dating.max" = c("1", "three", "4", "5"))
+  expect_warning(
+    expect_warning(make_chrongler_conc(test), "dating.max"),
+    "NAs"
+  )
+})
+
+test_that("add old column name to warning", {
+  test <- data.frame("group" = c("Group A", "Group A", "Group A", "Group B"),
+                     "values" = c("Period 1", "Period 2", "Period 3", "Period 4"),
+                     "minimum" = c("2", "2", "hello", "5"),
+                     "maximum" = c(3, 4, 5, 6))
+  expect_warning(
+    expect_warning(
+      make_chrongler_conc(test,
+                          cols = list(dating.min = "minimum",
+                                      dating.max = "maximum")),
+      "minimum"),
+    "NAs"
+  )
+})
+
+
+test_that("warns if max is higher than or equal to min", {
+  test <- data.frame("group" = c("Group A", "Group A", "Group A", "Group B"),
+                     "values" = c("Period 1", "Period 2", "Period 3", "Period 4"),
+                     "dating.min" = c(1, 3, 4, 7),
+                     "dating.max" = c(2, 3, 5, 6))
+  expect_warning(make_chrongler_conc(test), "'Period 2', 'Period 4'")
+})
+
+
+
 
 
 
@@ -226,17 +272,6 @@ test_that("group column missing", {
                      "dating.min" = c(1, 2, 3, 4),
                      "dating.max" = c(2, 3, 4, 5))
   expect_error(make_chrongler_conc(test), "group")
-})
-
-test_that("dating not numeric", {
-  test <- data.frame("group" = c("A", "A", "A", "B"),
-                     "values" = c("A", "donc", "esel", "bla"),
-                     "dating.min" = c("2", "2", "hello", "5"),
-                     "dating.max" = c("2", "3", "4", "5"),
-                     "color" = c("green", "red", "yellow", "brown"))
-  warnings <- capture_warnings(make_chrongler_conc(test))
-  expect_true(any(grepl("numeric", warnings)))
-  expect_true(any(grepl("coercion", warnings)))
 })
 
 

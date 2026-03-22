@@ -1,12 +1,19 @@
 #' Produce a concordance object that can be used with `chrongler` functions
 #'
 #' @description
+#'
 #' The csv-file or data.frame you supply should contain containing two columns: the first column
 #'    should list all period-"groups", e.g. 'Roman Imperial Period', and the
 #'    second one should list all the corresponding periods, e.g.
 #'    'Early Imperial', ..., 'Late Imperial' and so forth. The grouping
 #'    data.frame should be in chronological order, because the results will
 #'    be returned as an ordered factor according to this order.#'
+#'
+#' @details
+#'  Warnings are supplied if the dating seems to be out of order. This happens
+#'  if the value in `dating.max` is lower than or equal to the corresponding
+#'  value in `dating.min`.
+#'
 #'
 #'
 #' @param file chr / data.frame: Path to a *csv*-file to be read
@@ -136,16 +143,28 @@ make_chrongler_conc <- function(file,
   }
 
   # Coerce to numeric?
-  num_min <- all(is.numeric(data[, cols$dating.min]))
-  num_max <- all(is.numeric(data[, cols$dating.max]))
-  if(num_min == FALSE | num_max == FALSE) {
-    msg <- c(ifelse(num_min, NA, "dating.min"), ifelse(num_max, NA, "dating.max"))
-    msg <- paste0("Non-numeric values in: ",
-                  paste(msg[!is.na(msg)], collapse = " and "),
-                  ".")
-    warning(msg)
+  dating_min_is_numeric <- all(is.numeric(data[, cols$dating.min]))
+  dating_max_is_numeric <- all(is.numeric(data[, cols$dating.max]))
+  if (dating_min_is_numeric == FALSE) {
+    warning("Non-numeric values in column ",
+            df_cols[cols$dating.min],
+            " ('dating.min').")
     data[, cols$dating.min] <- as.numeric(data[, cols$dating.min])
+  }
+  if (dating_max_is_numeric == FALSE) {
+    warning("Non-numeric values in column ",
+            df_cols[cols$dating.max],
+            " ('dating.max').")
     data[, cols$dating.max] <- as.numeric(data[, cols$dating.max])
+  }
+
+  min_higher_or_equal_max <- data[, cols$dating.min] >= data[, cols$dating.max]
+  min_higher_or_equal_max <- na.omit(min_higher_or_equal_max)
+  if (any(min_higher_or_equal_max)) {
+    warning("Dating for values '",
+            paste0(data[min_higher_or_equal_max, cols$values],
+                   collapse = "', '"),
+            "' seems to be out of order or faulty. Check your data.")
   }
 
   groups <- unique(data[, cols$group])
