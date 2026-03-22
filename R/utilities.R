@@ -53,3 +53,20 @@ missing_periods <- function(present_periods, possible_periods) {
   }
   return(character(0))
 }
+
+#' Return NA if a Value is NULL or of Length 0
+#'
+#' @param x A value.
+#'
+#' @returns `x` or `NA`
+#'
+#' @keywords internal
+#' @examples
+#' na_if_empty(list())
+#' na_if_empty(character(0))
+#' na_if_empty(NULL)
+na_if_empty <- function(x) {
+  if (is.null(x)) return(NA)
+  if (length(x) == 0) return(NA)
+  return(x)
+}

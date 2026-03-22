@@ -75,29 +75,24 @@ derive_dating <- function(data, conc,
     stop("None of the periods exist in the concordance.")
   }
 
-  new_dating <- apply(data, MARGIN = 1, FUN = function(x) {
-    x <- as.list(x)
-    new <- list()
-    from <- conc$dating[[x[[start]]]]$from
-    from <- as.numeric(from)
-    new$new.dating.min <- ifelse(is.numeric(from), from, NA)
+  # is.numeric(NA) is FALSE, but vapply() seems to consider or coerce NA as numeric.
+  # if the problem ever arises, swap for NA_real_ or rather coerce explicitly.
+  new_dating.min <- vapply(data[, start], function(period) {
+    na_if_empty(conc$dating[[period]]$from)
+  }, numeric(1))
 
-    to <- conc$dating[[x[[end]]]]$to
-    to <- as.numeric(to)
-    new$new.dating.max <- ifelse(is.numeric(to), to, NA)
+  new_dating.max <- vapply(data[, end], function(period) {
+    na_if_empty(conc$dating[[period]]$to)
+  }, numeric(1))
 
-    new
-  })
-  new_dating <- do.call(rbind.data.frame, new_dating)
-
-  min_na <- which(is.na(data[, dating.min]) & !is.na(data[, dating.max]) & !is.na(new_dating$new.dating.min))
-  max_na <- which(!is.na(data[, dating.min]) & is.na(data[, dating.max]) & !is.na(new_dating$new.dating.max))
+  min_na <- which(is.na(data[, dating.min]) & !is.na(data[, dating.max]) & !is.na(new_dating.min))
+  max_na <- which(!is.na(data[, dating.min]) & is.na(data[, dating.max]) & !is.na(new_dating.max))
 
   complete_na <- is.na(data[, dating.min]) & is.na(data[, dating.max])
 
-  replace <- which(complete_na & !is.na(new_dating$new.dating.min))
-  data[c(replace, min_na), dating.min] <- new_dating$new.dating.min[c(replace, min_na)]
-  data[c(replace, max_na), dating.max] <- new_dating$new.dating.max[c(replace, max_na)]
+  replace <- which(complete_na & !is.na(new_dating.min))
+  data[c(replace, min_na), dating.min] <- new_dating.min[c(replace, min_na)]
+  data[c(replace, max_na), dating.max] <- new_dating.max[c(replace, max_na)]
 
   if (length(as.character(data$dating.source)) == 0) {
     data$dating.source <- NA
