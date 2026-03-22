@@ -63,15 +63,16 @@ derive_dating <- function(data, conc,
     dating.max <- colnames_to_index(colnames(data), "dating.max")
   }
 
-  not_found <- unique(
-    missing_periods(present_periods = data[, start],
-                    possible_periods = names(conc$dating)),
-    missing_periods(present_periods = data[, end],
-                    possible_periods = names(conc$dating))
+  present_periods <- unique(c(data[, start],  data[, end]))
+  present_periods <- present_periods[!is.na(present_periods)]
+
+  not_found <- missing_periods(
+    present_periods = present_periods,
+    possible_periods = names(conc$all)
   )
 
-  if (all(unique(c(data[, end], data[, start])) %in% not_found)) {
-    stop("None of the periods exist in the supplied concordance.")
+  if (all(present_periods %in% not_found)) {
+    stop("None of the periods exist in the concordance.")
   }
 
   new_dating <- apply(data, MARGIN = 1, FUN = function(x) {
