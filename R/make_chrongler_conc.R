@@ -1,15 +1,21 @@
-#' Produce a concordance object that can be used with `chrongler` functions
+#' Produce a Concordance for Wrangling Categorical Data with `chrongler`
 #'
 #' @description
-#'
-#' The csv-file or data.frame you supply should contain containing two columns: the first column
-#'    should list all period-"groups", e.g. 'Roman Imperial Period', and the
-#'    second one should list all the corresponding periods, e.g.
-#'    'Early Imperial', ..., 'Late Imperial' and so forth. The grouping
-#'    data.frame should be in chronological order, because the results will
-#'    be returned as an ordered factor according to this order.#'
+#' `chrongler` assumes that periods come in groups: A set of larger scale
+#' periods or "era"s, which can span multiple periods. The vignette
+#' demonstrates this with the example of the Roman Republic and the Roman
+#' Empire, both encompassing multiple "sub-periods". Time periods also have
+#' a beginning and an end that can be expressed in years BCE/CE. `chrongler`
+#' currently uses negative and positive numeric values for these dates.
+#' (Be aware or potential year-0-errors when further processing your data.)
+#' With `make_chrongler_conc()` you can produce a concordance for periods
+#' and their groups, start, and end dates, which is used by all other
+#' `chrongler`-functions to reformat your data.
 #'
 #' @details
+#'  The `data.frame` or *csv*-file you supply to this function should be
+#'  ordered, i.e. earlier periods should come in the rows before later
+#'  periods.
 #'  Warnings are supplied if the dating seems to be out of order. This happens
 #'  if the value in `dating.max` is lower than or equal to the corresponding
 #'  value in `dating.min`.
@@ -61,7 +67,6 @@
 #'   \code{vignette("chrongler_workflow", package = "chrongler")}
 #'
 #' @export
-#'
 #' @importFrom utils read.csv
 #'
 #' @examples
@@ -101,7 +106,8 @@ make_chrongler_conc <- function(file,
 
   unknown <- setdiff(names(cols), c(mandatory_columns, optional_columns))
   if (length(unknown) > 0) {
-    warning("Unknown names in `cols` will be ignored: ", paste(unknown, collapse = ", "))
+    warning("Unknown names in `cols` will be ignored: ",
+            paste(unknown, collapse = ", "))
   }
 
   # With this I try to catch all possible cases. People adding only a few
@@ -120,7 +126,8 @@ make_chrongler_conc <- function(file,
     }
     if (col %in% mandatory_columns) {
       # This will stop() if it cannot find the column.
-      cols[[col]] <- colnames_to_index(colnames = df_cols, columns = column_name)
+      cols[[col]] <- colnames_to_index(colnames = df_cols,
+                                       columns = column_name)
     } else {
       # We do not want to stop() for the optional columns, so we work around
       # the error message we can expect from colnames_to_index() if the column
@@ -199,7 +206,9 @@ make_chrongler_conc <- function(file,
   }
 
   ordered_periods <- unname(unlist(grouped))
-  ordered_periods <- factor(ordered_periods, levels = ordered_periods, ordered = TRUE)
+  ordered_periods <- factor(ordered_periods,
+                            levels = ordered_periods,
+                            ordered = TRUE)
 
   grouped <- lapply(grouped, function(x) {
     x <- factor(x, levels = ordered_periods, ordered = TRUE)
@@ -246,7 +255,7 @@ make_chrongler_conc <- function(file,
                color = colors,
                source = sources)
 
-  class(conc) <- c("list", "chrongler.conc")
+  class(conc) <- c("chrongler.conc", "list")
 
   return(conc)
 }

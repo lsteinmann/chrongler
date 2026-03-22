@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_chrongler_conc.R
 \name{make_chrongler_conc}
 \alias{make_chrongler_conc}
-\title{Produce a concordance object that can be used with \code{chrongler} functions}
+\title{Produce a Concordance for Wrangling Categorical Data with \code{chrongler}}
 \usage{
 make_chrongler_conc(
   file,
@@ -62,14 +62,21 @@ including group-level periods.
 This class is used by all other \code{chrongler} functions to process data.
 }
 \description{
-The csv-file or data.frame you supply should contain containing two columns: the first column
-should list all period-"groups", e.g. 'Roman Imperial Period', and the
-second one should list all the corresponding periods, e.g.
-'Early Imperial', ..., 'Late Imperial' and so forth. The grouping
-data.frame should be in chronological order, because the results will
-be returned as an ordered factor according to this order.#'
+\code{chrongler} assumes that periods come in groups: A set of larger scale
+periods or "era"s, which can span multiple periods. The vignette
+demonstrates this with the example of the Roman Republic and the Roman
+Empire, both encompassing multiple "sub-periods". Time periods also have
+a beginning and an end that can be expressed in years BCE/CE. \code{chrongler}
+currently uses negative and positive numeric values for these dates.
+(Be aware or potential year-0-errors when further processing your data.)
+With \code{make_chrongler_conc()} you can produce a concordance for periods
+and their groups, start, and end dates, which is used by all other
+\code{chrongler}-functions to reformat your data.
 }
 \details{
+The \code{data.frame} or \emph{csv}-file you supply to this function should be
+ordered, i.e. earlier periods should come in the rows before later
+periods.
 Warnings are supplied if the dating seems to be out of order. This happens
 if the value in \code{dating.max} is lower than or equal to the corresponding
 value in \code{dating.min}.
