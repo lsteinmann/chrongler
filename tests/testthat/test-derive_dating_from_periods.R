@@ -78,9 +78,8 @@ test_that("finds missing periods", {
   )
   expect_all_true(is.data.frame(tmp))
   expect_true(is.na(tmp[1,"dating.min"]))
-  expect_true(is.na(tmp[1,"dating.max"]))
-  # Something I need to fix!
-  # expect_true(is.na(tmp[1,"source"]))
+  expect_equal(tmp[1,"dating.max"], -31)
+  expect_equal(tmp[1,"dating.source"], "Derived from period")
 })
 
 test_conc <- make_chrongler_conc(
@@ -104,6 +103,62 @@ test_that("derives the dating from periods as expected", {
                            start = "start", end = "end")
   expect_equal(
     derived$dating.min, expectation.min
+  )
+  expect_equal(
+    derived$dating.max, expectation.max
+  )
+})
+
+
+test_that("preserves pre-existing dating", {
+  data <- data.frame(
+    id = c("Obj_1", "Obj_2", "Obj_3"),
+    start = c("Period 1", "Period 2", "Period 1"),
+    end = c("Period 2", "Period 2", "Period 1"),
+    existing.min = c(NA, NA, -50),
+    existing.max = c(NA, NA, -25)
+  )
+  expectation.min = c(-100, 100, -50)
+  expectation.max = c(150, 150, -25)
+  expectation.source = c("Derived from period", "Derived from period", NA)
+  derived <- derive_dating(data = data, conc = test_conc,
+                           start = "start", end = "end",
+                           dating.min = "existing.min",
+                           dating.max = "existing.max")
+  expect_equal(
+    derived$existing.min, expectation.min
+  )
+  expect_equal(
+    derived$existing.max, expectation.max
+  )
+  expect_equal(
+    derived$dating.source, expectation.source
+  )
+})
+
+test_that("message and override for pre-existing dating", {
+  data <- data.frame(
+    id = c("Obj_1", "Obj_2", "Obj_3"),
+    start = c("Period 1", "Period 2", "Period 1"),
+    end = c("Period 2", "Period 2", "Period 1"),
+    dating.min = c(NA, NA, -50)
+  )
+  expectation.min = c(-100, 100, -100)
+  expectation.max = c(150, 150, -50)
+  expect_message(
+    derived <- derive_dating(data = data, conc = test_conc,
+                             start = "start", end = "end"),
+    "dating.min"
+  )
+  expect_equal(
+    derived$dating.min, expectation.min
+  )
+  data$dating.min <- NULL
+  data$dating.max <- c(NA, NA, -25)
+  expect_message(
+    derived <- derive_dating(data = data, conc = test_conc,
+                             start = "start", end = "end"),
+    "dating.max"
   )
   expect_equal(
     derived$dating.max, expectation.max

@@ -85,29 +85,36 @@ derive_dating <- function(data, conc,
     na_if_empty(conc$dating[[period]]$to)
   }, numeric(1))
 
-  min_na <- which(is.na(data[, dating.min]) & !is.na(data[, dating.max]) & !is.na(new_dating.min))
-  max_na <- which(!is.na(data[, dating.min]) & is.na(data[, dating.max]) & !is.na(new_dating.max))
+  min_empty <- is.na(data[, dating.min])
+  data[min_empty, dating.min] <- new_dating.min[min_empty]
 
-  complete_na <- is.na(data[, dating.min]) & is.na(data[, dating.max])
+  max_empty <- is.na(data[, dating.max])
+  data[max_empty, dating.max] <- new_dating.max[max_empty]
 
-  replace <- which(complete_na & !is.na(new_dating.min))
-  data[c(replace, min_na), dating.min] <- new_dating.min[c(replace, min_na)]
-  data[c(replace, max_na), dating.max] <- new_dating.max[c(replace, max_na)]
-
-  if (length(as.character(data$dating.source)) == 0) {
-    data$dating.source <- NA
+  if (!"dating.source" %in% colnames(data)) {
+    data[, "dating.source"] <- NA
   }
-  data$dating.source[replace] <- ifelse(
-    is.na(data$dating.source[replace]),
-    "Derived from period",
-    paste(data$dating.source[replace], " - Derived from period")
-    )
+  source_empty <- is.na(data[, "dating.source"])
 
-  data$dating.source[c(min_na, max_na)] <- ifelse(
-    is.na(data$dating.source[c(min_na, max_na)]),
+  fully_derived <- min_empty & max_empty
+  partially_derived <- (min_empty | max_empty) & !fully_derived
+
+  # There is still a little problem going on here: If I can't derive the
+  # dating from the period because the period was NA, then it will still
+  # add the comment that it was derived from the period if there is no
+  # pre-existing dating. But nothing to worry about.
+
+  data$dating.source[fully_derived] <- ifelse(
+    source_empty[fully_derived],
     "Derived from period",
-    paste(data$dating.source[c(min_na, max_na)], " - Partially derived from period")
-    )
+    paste(data$dating.source[fully_derived], "- Derived from period")
+  )
+
+  data$dating.source[partially_derived] <- ifelse(
+    source_empty[partially_derived],
+    "Partially derived from period",
+    paste(data$dating.source[partially_derived], "- Partially derived from period")
+  )
 
   return(data)
 }
