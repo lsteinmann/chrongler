@@ -1,6 +1,5 @@
 # WIP
 - Duplicating objects by periods also needs to attach the "fraction" of each object.
-- Example data integration and also: why does it exist. see inst/extdata.
 - Documentation of all functions
 
 # Bugs

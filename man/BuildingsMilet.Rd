@@ -10,7 +10,8 @@
 A data frame with 110 rows and 3 columns:
 \describe{
 \item{identifier}{The name of a building in Miletus.}
-\item{period.start, period.end}{The earliest and latest period each building is dated to.}
+\item{period.start}{The earliest period the building can be dated to.}
+\item{period.end}{The latest period the building can be dated to.}
 }
 }
 }

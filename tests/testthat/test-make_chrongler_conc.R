@@ -245,3 +245,19 @@ test_that("fails if a mandatory column is missing", {
                      "dating.max" = c(2, 3, 5, 6))
   expect_error(make_chrongler_conc(test), "not present")
 })
+
+
+test_that("works with example data: RomanPeriods", {
+  data("RomanPeriods")
+  expect_true(
+    inherits(make_chrongler_conc(RomanPeriods), "chrongler.conc")
+  )
+})
+
+test_that("works with example data: PeriodsMilet", {
+  data("PeriodsMilet")
+  expect_true(
+    inherits(make_chrongler_conc(PeriodsMilet), "chrongler.conc")
+  )
+})
+

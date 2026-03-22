@@ -1,13 +1,15 @@
-exChronglerConc <- read.csv(
-  system.file(package = "chrongler",
-              "extdata/2023_periods_grouping_example.csv")
-)
-exChronglerConc <- make_chrongler_conc(exChronglerConc)
+## tests for derive_dating, from derive_dating.R
 
-test_that("works", {
+test_that("works with example data: BuildingsMilet", {
+  data("PeriodsMilet")
   data("BuildingsMilet")
-  derive_dating(BuildingsMilet, exChronglerConc,
-                             start = "period.start",
-                             end = "period.end")
-  expect_equal(2 * 2, 4)
+  conc <- make_chrongler_conc(PeriodsMilet)
+  expect_warning(
+    result <- derive_dating(
+      data = BuildingsMilet,
+      conc = conc,
+      start = "period.start",
+      end = "period.end")
+  )
 })
+
