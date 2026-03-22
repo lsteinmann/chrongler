@@ -55,10 +55,18 @@ derive_dating <- function(data, conc,
                     silent = TRUE)
 
   if (inherits(dating.min, "try-error")) {
+    if ("dating.min" %in% colnames(data)) {
+      message("Add column names with pre-existing dating as the 'dating.min' ",
+              "argument if you wish to only fill NA-values.")
+    }
     data$dating.min <- NA
     dating.min <- colnames_to_index(colnames(data), "dating.min")
   }
   if (inherits(dating.max, "try-error")) {
+    if ("dating.max" %in% colnames(data)) {
+      message("Add column names with pre-existing dating as the 'dating.max' ",
+              "argument if you wish to only fill NA-values.")
+    }
     data$dating.max <- NA
     dating.max <- colnames_to_index(colnames(data), "dating.max")
   }
