@@ -70,8 +70,10 @@ derive_dating <- function(data, conc,
   }
 
   not_found <- unique(
-    periods_exist(data[, start], names(conc$dating)),
-    periods_exist(data[, end], names(conc$dating))
+    missing_periods(period_vec = data[, start],
+                    possible_periods = names(conc$dating)),
+    missing_periods(period_vec = data[, end],
+                    possible_periods = names(conc$dating))
   )
 
   if (all(unique(c(data[, end], data[, start])) %in% not_found)) {

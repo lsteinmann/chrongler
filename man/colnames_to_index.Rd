@@ -2,19 +2,21 @@
 % Please edit documentation in R/utilities.R
 \name{colnames_to_index}
 \alias{colnames_to_index}
-\title{Get the index for the colname}
+\title{Get the Index for the Specified Column Names}
 \usage{
 colnames_to_index(colnames, columns)
 }
 \arguments{
-\item{colnames}{Vector of column names}
+\item{colnames}{(chr) Vector of column names of a \code{data.frame} from which
+the index / position needs to be found.}
 
-\item{columns}{The columns for which to return the indices}
+\item{columns}{(chr/int) The names or indices of the columns whose indices
+in the \code{colnames}-vector should be returned.}
 }
 \value{
-integer
+integer - the position of \code{columns} in \code{colnames}
 }
 \description{
-Get the index for the colname
+Get the Index for the Specified Column Names
 }
 \keyword{internal}
