@@ -140,16 +140,6 @@ make_chrongler_conc <- function(file,
     }
   }
 
-  # Now this part should actually never be reached, since we fail up there
-  # already - We will see.
-  missing <- sapply(cols, is.na)
-  missing <- names(missing[missing])
-  if (any(missing %in% mandatory_columns)) {
-    stop(paste0("Mandatory columns: '",
-                paste0(missing[is.element(missing, mandatory_columns)],
-                       collapse = "', '"), "' not found."))
-  }
-
   # Coerce to numeric?
   dating_min_is_numeric <- all(is.numeric(data[, cols$dating.min]))
   dating_max_is_numeric <- all(is.numeric(data[, cols$dating.max]))
