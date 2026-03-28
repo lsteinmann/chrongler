@@ -24,12 +24,13 @@ Using *chrongler* (and a concordance of periods and their grouping and absolute 
 -   add absolute dating based on the periods an object is dated to (`derive_dating()`)
 -   add the period an object would be dated to based on absolute dating values (`derive_period()`)
 
-The inaccurately named "example_workflow"-vignette explains the functions and especially setting up the concordance in detail, see:
+A vignette explains the functions and especially setting up the concordance in detail, see:
 
 ``` r
 browseVignettes("chrongler")
 ```
+or read it online: [chrongler wrangles categorical chronological data](https://lsteinmann.github.io/chrongler/articles/chrongler_workflow.html).
 
 # why
 
-I made it mainly for myself to avoid redundancies in various other projects and have the process a bit more organized. There is significant overlap with the way that data imported from [Field Desktop](https://github.com/dainst/idai-field) via [idaifieldR](https://github.com/lsteinmann/idaifieldR) is formatted, since this is my main use case. Of course, *chrongler* can be used with data gathered elsewhere as well, as long as you keep to the formats described in the vignette.
+I made it mainly for myself to avoid redundancies in various other projects and have the process a bit more organized. There is significant overlap with the way that data imported from [Field Desktop](https://github.com/dainst/idai-field) via [idaifieldR](https://github.com/lsteinmann/idaifieldR) is formatted, since this is my main use case. Of course, *chrongler* can just as easily be used with data gathered elsewhere as well.
