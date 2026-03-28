@@ -97,7 +97,7 @@ derive_period <- function(data, conc,
   new_periods <- data
   new_periods[, "period.start"] <- NA
   new_periods[, "period.end"] <- NA
-  i <- 1
+
   for (i in seq_len(nrow(new_periods))) {
     match_from <- which(new_periods[i, min] >= from_all & new_periods[i, min] <= to_all)
     res_from <- names(from_all[match_from])
