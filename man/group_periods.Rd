@@ -7,32 +7,36 @@
 group_periods(data, conc, start, end)
 }
 \arguments{
-\item{data}{A data.frame containing at least two columns with the
+\item{data}{\emph{data.frame}, \emph{required} containing at least two columns with the
 start and end period for each row. Columns can be specified in the relevant
 arguments. The values in the start and end period need to correspond with
 the relevant values in the concordance used (see \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}).}
 
-\item{conc}{A \code{chrongler.conc}-list built by \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}.}
+\item{conc}{\emph{chrongler.conc}, \emph{required}, as built by \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}.}
 
-\item{start}{\emph{chr/int}. Name or index of the column with the \strong{earliest period}.}
+\item{start}{\emph{chr/int}, \emph{required}. Name or index of the column with the \strong{earliest period}.}
 
-\item{end}{\emph{chr/int}. Name or index of the column with the \strong{latest period}.}
+\item{end}{\emph{chr/int}, \emph{required}. Name or index of the column with the \strong{latest period}.}
 }
 \value{
 A data.frame, with the values replaced in the columns from
 the \code{start} and \code{end}-arguments (see description).
+The input \code{data} as a \code{data.frame}, with additional columns:
+\itemize{
+\item \code{start.grpd} -- \emph{ordered factor} of the group the value in the start column belongs to.
+\item \code{end.grpd} -- \emph{ordered factor} of the group the value in the end column belongs to.
+}
 }
 \description{
-For each row in \code{data}, the value in the \code{start} and \code{end} column is
-replaced with the name of the respective \emph{group} as noted in the concordance
+For each row in \code{data}, the group each period in the \code{start} and \code{end} column
+belongs to is found. The groups are ordered factors as noted in the concordance
 supplied to the \code{conc} (\code{\link[=make_chrongler_conc]{make_chrongler_conc()}}) argument. Values that
 already are listed as groups are not changed.
 }
 \examples{
 data("BuildingsMilet")
-conc <- read.csv(system.file(package = "chrongler",
-  "extdata/2023_periods_grouping_example.csv"))
-conc <- make_chrongler_conc(conc)
+data("PeriodsMilet")
+conc <- make_chrongler_conc(PeriodsMilet)
 group_periods(
   BuildingsMilet,
   conc,
@@ -41,5 +45,7 @@ group_periods(
  )
 }
 \seealso{
-\code{\link[=make_chrongler_conc]{make_chrongler_conc()}}
+\itemize{
+\item \code{\link[=ungroup_periods]{ungroup_periods()}}
+}
 }

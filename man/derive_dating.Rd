@@ -7,16 +7,16 @@
 derive_dating(data, conc, start, end, previous_min, previous_max)
 }
 \arguments{
-\item{data}{A data.frame containing at least two columns with the
+\item{data}{\emph{data.frame}, \emph{required} containing at least two columns with the
 start and end period for each row. Columns can be specified in the relevant
 arguments. The values in the start and end period need to correspond with
 the relevant values in the concordance used (see \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}).}
 
-\item{conc}{A \code{chrongler.conc}-list built by \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}.}
+\item{conc}{\emph{chrongler.conc}, \emph{required}, as built by \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}.}
 
-\item{start}{\emph{chr/int}. Name or index of the column with the \strong{earliest period}.}
+\item{start}{\emph{chr/int}, \emph{required}. Name or index of the column with the \strong{earliest period}.}
 
-\item{end}{\emph{chr/int}. Name or index of the column with the \strong{latest period}.}
+\item{end}{\emph{chr/int}, \emph{required}. Name or index of the column with the \strong{latest period}.}
 
 \item{previous_min}{\emph{chr/int}, \emph{optional}. Name or index of a pre-existing column
 containing absolute \strong{minimum dating}. If supplied, previously empty

@@ -15,6 +15,10 @@
 #' periods (see [group_periods()]). If `FALSE`: all rows are duplicated
 #' according to their single periods (see [ungroup_periods()]).
 #'
+#' @seealso
+#'  * [group_periods()]
+#'  * [ungroup_periods()]
+#'
 #' @return The input `data` as a `data.frame`, with duplicated rows and additional columns:
 #'   * `period` -- *ordered factor* of the period represented by this row.
 #'   * `fraction` -- *numeric* value of 1 divided by the number of periods an

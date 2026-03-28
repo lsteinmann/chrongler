@@ -12,7 +12,7 @@ minimum and maximum absolute dating for each row as integer.
 The values need to correspond with the possible dating ranges present in
 the concordance used (see \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}).}
 
-\item{conc}{A \code{chrongler.conc}-list built by \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}.}
+\item{conc}{\emph{chrongler.conc}, \emph{required}, as built by \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}.}
 
 \item{min}{\emph{chr/int}. Name or index of the column with the \strong{minimum dating} (integers representing years).}
 
