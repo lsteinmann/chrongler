@@ -64,6 +64,12 @@ test_that("original start and end columns are preserved", {
   expect_identical(result$period.end, test_data$period.end)
 })
 
+test_that("NA input produces NA in grouped output", {
+  result <- group_periods(data = test_data, conc = test_conc,
+                          start = "period.start", end = "period.end")
+  expect_true(is.na(result$start.grpd[result$id == "Obj_6"]))
+  expect_true(is.na(result$end.grpd[result$id == "Obj_6"]))
+})
 
 #### Output columns
 

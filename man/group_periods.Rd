@@ -19,8 +19,6 @@ the relevant values in the concordance used (see \code{\link[=make_chrongler_con
 \item{end}{\emph{chr/int}, \emph{required}. Name or index of the column with the \strong{latest period}.}
 }
 \value{
-A data.frame, with the values replaced in the columns from
-the \code{start} and \code{end}-arguments (see description).
 The input \code{data} as a \code{data.frame}, with additional columns:
 \itemize{
 \item \code{start.grpd} -- \emph{ordered factor} of the group the value in the start column belongs to.

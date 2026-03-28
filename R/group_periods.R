@@ -17,9 +17,7 @@
 #' @seealso
 #'  * [ungroup_periods()]
 #'
-#' @return A data.frame, with the values replaced in the columns from
-#' the `start` and `end`-arguments (see description).
-#' The input `data` as a `data.frame`, with additional columns:
+#' @return The input `data` as a `data.frame`, with additional columns:
 #'   * `start.grpd` -- *ordered factor* of the group the value in the start column belongs to.
 #'   * `end.grpd` -- *ordered factor* of the group the value in the end column belongs to.
 #'
