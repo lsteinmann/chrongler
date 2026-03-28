@@ -91,7 +91,7 @@ test_conc <- make_chrongler_conc(
   )
 )
 
-test_that("derives the dating from periods as expected", {
+test_that("derives the full dating from periods as expected", {
   data <- data.frame(
     id = c("Obj_1", "Obj_2"),
     start = c("Period 1", "Period 2"),
@@ -109,6 +109,33 @@ test_that("derives the dating from periods as expected", {
   )
 })
 
+test_that("derives the partial dating from periods as expected", {
+  data <- data.frame(
+    id = c("Obj_1", "Obj_2", "Obj_3"),
+    start = c("Period 1", "Period 2", "Period 1"),
+    end = c("Period 2", "Period 2", "Period 2"),
+    min = c(-90, NA, NA),
+    max = c(NA, 140, NA)
+  )
+  expectation.min = c(-90, 100, -100)
+  expectation.max = c(150, 140, 150)
+  expectation.source = c("Partially derived from period",
+                         "Partially derived from period",
+                         "Derived from period")
+  derived <- derive_dating(data = data, conc = test_conc,
+                           start = "start", end = "end",
+                           previous_min = "min", previous_max = "max")
+  expect_equal(
+    derived$dating.min, expectation.min
+  )
+  expect_equal(
+    derived$dating.max, expectation.max
+  )
+  expect_identical(
+    derived$dating.source, expectation.source
+  )
+})
+
 
 test_that("preserves pre-existing dating", {
   data <- data.frame(
@@ -123,13 +150,13 @@ test_that("preserves pre-existing dating", {
   expectation.source = c("Derived from period", "Derived from period", NA)
   derived <- derive_dating(data = data, conc = test_conc,
                            start = "start", end = "end",
-                           dating.min = "existing.min",
-                           dating.max = "existing.max")
+                           previous_min = "existing.min",
+                           previous_max = "existing.max")
   expect_equal(
-    derived$existing.min, expectation.min
+    derived$dating.min, expectation.min
   )
   expect_equal(
-    derived$existing.max, expectation.max
+    derived$dating.max, expectation.max
   )
   expect_equal(
     derived$dating.source, expectation.source
@@ -148,7 +175,7 @@ test_that("message and override for pre-existing dating", {
   expect_message(
     derived <- derive_dating(data = data, conc = test_conc,
                              start = "start", end = "end"),
-    "dating.min"
+    "previous_min"
   )
   expect_equal(
     derived$dating.min, expectation.min
@@ -158,7 +185,7 @@ test_that("message and override for pre-existing dating", {
   expect_message(
     derived <- derive_dating(data = data, conc = test_conc,
                              start = "start", end = "end"),
-    "dating.max"
+    "previous_max"
   )
   expect_equal(
     derived$dating.max, expectation.max

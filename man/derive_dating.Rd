@@ -4,7 +4,7 @@
 \alias{derive_dating}
 \title{Derive Dating from Periods}
 \usage{
-derive_dating(data, conc, start, end, dating.min, dating.max)
+derive_dating(data, conc, start, end, previous_min, previous_max)
 }
 \arguments{
 \item{data}{A data.frame containing at least two columns with the
@@ -18,30 +18,35 @@ the relevant values in the concordance used (see \code{\link[=make_chrongler_con
 
 \item{end}{\emph{chr/int}. Name or index of the column with the \strong{latest period}.}
 
-\item{dating.min}{\emph{chr/int}, \emph{optional}. Name or index of a pre-existing column
-containing absolute \strong{minimum dating}. If it does exist, this function will
-only fill cells that were previously empty (\code{NA}). A comment is stored in a
-column called \emph{dating.source}. If this argument is left empty and a \emph{dating.min}
-column already exists, it will be overwritten.}
+\item{previous_min}{\emph{chr/int}, \emph{optional}. Name or index of a pre-existing column
+containing absolute \strong{minimum dating}. If supplied, previously empty
+values (\code{NA}) will be populated in the new \emph{dating.min} column. A comment is stored in a
+column called \emph{dating.source}.}
 
-\item{dating.max}{\emph{chr/int}, \emph{optional}. Name or index of a pre-existing column
-containing absolute \strong{maximum dating}. If it does exist, this function will
-only fill cells that were previously empty (\code{NA}). A comment is stored in a
-column called \emph{dating.source}. If this argument is left empty and a \emph{dating.max}
-column already exists, it will be overwritten.}
+\item{previous_max}{\emph{chr/int}, \emph{optional}. Name or index of a pre-existing column
+containing absolute \strong{maximum dating}. If supplied, previously empty
+values (\code{NA}) will be populated in the new \emph{dating.max} column. A comment is stored in a
+column called \emph{dating.source}.}
 }
 \value{
-A data.frame, with numeric values in the \code{dating.min} and
-\code{dating.max} columns and a comment in \code{dating.source} (see description).
+The input \code{data} as a \code{data.frame} with three additional columns:
+\itemize{
+\item \code{dating.min} — numeric, the earliest absolute date derived from the
+period in \code{start} (or copied from \code{previous_min} where available)
+\item \code{dating.max} — numeric, the latest absolute date derived from the
+period in \code{end} (or copied from \code{previous_max} where available)
+\item \code{dating.source} — character, a comment indicating how the dating was
+derived (\code{"Derived from period"}, \code{"Partially derived from period"},
+or \code{NA} if no derivation was necessary)
+}
 }
 \description{
 For each row in \code{data}, the value in the \code{start} and \code{end} column
 is used to gather the absolute dating of its period from the concordance
 object supplied to \code{conc} (\code{\link[=make_chrongler_conc]{make_chrongler_conc()}}). The absolute dating
-is stored in the \code{dating.min} and \code{dating.max} columns, which have this
-name if the corresponding arguments are empty. If column names are
-supplied as arguments, the data in these columns will not be overwritten
-and instead only filled in if the respective cells are empty (NA).
+is stored in new \code{dating.min} and \code{dating.max} columns.
+If \code{previous_min} and/or \code{previous_max} are supplied, the values from those
+columns are preferred, and only empty (\code{NA}) cells are filled with derived dates.
 A comment informing of the procedure is written to a column called
 \emph{dating.source}.
 }
