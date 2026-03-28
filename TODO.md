@@ -1,8 +1,8 @@
 # WIP
-- Documentation of all functions
+- S3 Classes from my old PR, maybe? At some point? Not now. 
 
 # Bugs
 - derive period could drop data? ??? (can it...?)
 
 # Tests
-- ungroup_periods	(no tests)
+- can always use more tests, actually. 

@@ -35,34 +35,34 @@ ungroup_periods <- function(data, conc, start, end) {
   start <- colnames_to_index(colnames = colnames(data), columns = start)
   end <- colnames_to_index(colnames = colnames(data), columns = end)
 
-  res_start <- as.character(data[, start])
-  matches <- match(res_start, conc$group.order)
-  res_start <- vapply(res_start, FUN.VALUE = "character", FUN = function (x) {
+  period_start <- as.character(data[, start])
+  period_start <- vapply(period_start, function (x) {
+    if (x %in% conc$period.order) return(x)
     gr_ind <- match(x, names(conc$grouped))
     first <- conc$grouped[[gr_ind]][1]
     if (length(first) == 0) {
-      x
+      NA_character_
     } else {
       as.character(first)
     }
-  })
+  }, character(1))
 
-  res_end <- as.character(data[, end])
-  matches <- match(res_end, conc$group.order)
-  res_end <- vapply(res_end, FUN.VALUE = "character", FUN = function (x) {
+  period_end <- as.character(data[, end])
+  period_end <- vapply(period_end, function (x) {
+    if (x %in% conc$period.order) return(x)
     gr_ind <- match(x, names(conc$grouped))
     group <- conc$grouped[[gr_ind]]
     last <- group[length(group)]
     if (length(last) == 0) {
-      x
+      NA_character_
     } else {
       as.character(last)
     }
-  })
+  }, character(1))
 
-  start.ungr <- ordered(res_start, levels = conc$period.order)
+  start.ungr <- ordered(period_start, levels = conc$period.order)
   data[, "start.ungr"] <- start.ungr
-  end.ungr <- ordered(res_end, levels = conc$period.order)
+  end.ungr <- ordered(period_end, levels = conc$period.order)
   data[, "end.ungr"] <- end.ungr
 
   return(data)

@@ -170,7 +170,6 @@ test_that("fraction values are correct", {
 
 
 #### NA handling
-# This test fails because ungroup_ and group_ are not able to handle NA
 test_that("NA start or end produces single row with NA period and NA fraction", {
   data <- data.frame(
     id = c("Obj_1", "Obj_2"),
