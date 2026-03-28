@@ -60,6 +60,14 @@ test_that("keeps other columns intact", {
   expect_equal(sum(result$unrelated_column == "info_1"), 2)
 })
 
+test_that("message for missing argument, by_group set to FALSE", {
+  expect_message(
+    tmp <- duplicate_by(data = test_data, conc = test_conc,
+                 start = "period.start", end = "period.end"),
+    "by_group"
+  )
+  expect_all_true(c("start.ungr", "end.ungr") %in% colnames(tmp))
+})
 
 #### Row counts
 
