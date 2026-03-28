@@ -15,11 +15,6 @@ test_data <- data.frame(
   period.end =   c("Period 2", "Period 2", "Group A", "Period 3", "Group B", "unknown")
 )
 
-start <- "period.start"
-end <- "period.end"
-data <- test_data
-conc <- test_conc
-
 #### Basics
 
 test_that("fails if conc is not a chrongler.conc", {
