@@ -62,10 +62,12 @@ missing_periods <- function(present_periods, possible_periods) {
 #'
 #' @keywords internal
 #' @examples
+#' \dontrun{
 #' na_if_empty(list())
 #' na_if_empty(character(0))
 #' na_if_empty(NULL)
 #' na_if_empty("")
+#' }
 na_if_empty <- function(x) {
   if (is.null(x)) return(NA)
   if (length(x) == 0) return(NA)

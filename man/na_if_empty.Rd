@@ -16,9 +16,11 @@ na_if_empty(x)
 Return NA if a Value is NULL or of Length 0
 }
 \examples{
+\dontrun{
 na_if_empty(list())
 na_if_empty(character(0))
 na_if_empty(NULL)
 na_if_empty("")
+}
 }
 \keyword{internal}
