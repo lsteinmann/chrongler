@@ -261,3 +261,22 @@ test_that("works with example data: PeriodsMilet", {
   )
 })
 
+
+
+## Groups not present
+# TODO this is actually not great... should it not make the groups and add
+# dates for the groups automatically? Maybe not, I am not sure.
+test_that("groups are not periods if they are not explicitly added", {
+  tmp <- data.frame(
+    values = c("Period 1", "Period 2", "Period 3"),
+    group = c("Group A", "Group A", "Group B"),
+    dating.min = c(-100, -49, 100),
+    dating.max = c(-50, 99, 150)
+  )
+  res <- make_chrongler_conc(tmp)
+  expect_equal(
+    factor(tmp$values, levels = tmp$values, ordered = TRUE),
+    res$period.order
+  )
+})
+

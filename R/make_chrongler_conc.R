@@ -198,7 +198,10 @@ make_chrongler_conc <- function(file,
     ind <- which(data[, cols$group] == per_group)
     grouped_periods <- values[ind]
     if (length(grouped_periods) > 1) {
-      grouped_periods <- grouped_periods[-which(grouped_periods == per_group)]
+      self_ref <- which(grouped_periods == per_group)
+      if (length(self_ref) > 0) {
+        grouped_periods <- grouped_periods[-self_ref]
+      }
     }
     return(grouped_periods)
   })
