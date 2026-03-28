@@ -11,7 +11,6 @@ derive_period(
   max,
   previous_start,
   previous_end,
-  by_group = FALSE,
   paste_multiple = TRUE
 )
 }
@@ -36,8 +35,6 @@ column called \emph{period.source}.}
 containing a \strong{ending period}. If supplied, previously empty values (\code{NA})
 will be populated in the new \emph{period.end} column. A comment is stored in a
 column called \emph{period.source}.}
-
-\item{by_group}{TRUE/FALSE}
 
 \item{paste_multiple}{TRUE/FALSE}
 }

@@ -25,7 +25,6 @@
 #'  will be populated in the new *period.end* column. A comment is stored in a
 #'  column called *period.source*.
 #' @inheritParams group_periods
-#' @param by_group TRUE/FALSE
 #' @param paste_multiple TRUE/FALSE
 #'
 #'
@@ -58,7 +57,6 @@
 derive_period <- function(data, conc,
                           min, max,
                           previous_start, previous_end,
-                          by_group = FALSE,
                           paste_multiple = TRUE) {
 
 
@@ -92,12 +90,7 @@ derive_period <- function(data, conc,
     previous_end <- data[, previous_end]
   }
 
-  if (by_group == TRUE) {
-    pos_dating <- conc$dating[which(names(conc$dating) %in% conc$group.order)]
-  } else {
-    pos_dating <- conc$dating[which(names(conc$dating) %in% conc$period.order)]
-  }
-
+  pos_dating <- conc$dating[which(names(conc$dating) %in% conc$period.order)]
   from_all <- lapply(pos_dating, function(y) y$from)
   to_all <- lapply(pos_dating, function(y) y$to)
 
