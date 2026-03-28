@@ -1,93 +1,100 @@
 #' Derive Period from Absolute Dates
 #'
-#' For each row in `data`, the value in the `dating.min` and `dating.max` column
-#' is used to identify the period(s) the respective row would be dated in
+#' For each row in `data`, the value in the `min` and `max` column
+#' is used to identify the period(s) the respective row would belong to
 #' according to the dating ranges registered in the the concordance
-#' object supplied to `conc` ([make_chrongler_conc()]). The periods are
-#' stored in the `period.start` and `period.end` columns, which have this
-#' name if the corresponding arguments are empty. If column names are
-#' supplied as arguments, the data in these columns will not be overwritten
-#' and instead only filled in if the respective cells are empty (NA).
+#' object supplied to `conc` ([make_chrongler_conc()]). The newly assigned
+#' periods are stored in column names `period.start` and `period.end`.
+#' If `previous_start` and/or `previous_end` are supplied, the values from those
+#' columns are preferred, and only empty (`NA`) cells are filled with derived periods.
 #' A comment informing of the procedure is written to a column called
 #' *period.source*.
 #'
-#' @param dating.min chr/int
-#' @param dating.max chr/int
-#' @param start *chr/int*. Name or index of a pre-existing column
-#'  containing the **starting period**. If it does exist, this function will
-#'  only fill cells that were previously empty. A comment is stored in a
-#'  column called *period.source*. If this argument is left empty and a
-#'  *period.start* column already exists, it will be overwritten.
-#' @param end *chr/int*. Name or index of a pre-existing column
-#'  containing the **ending period**. If it does exist, this function will
-#'  only fill cells that were previously empty. A comment is stored in a
-#'  column called *period.source*. If this argument is left empty and a
-#'  *period.end* column already exists, it will be overwritten.
+#' @param data A data.frame containing at least two columns with the
+#'  minimum and maximum absolute dating for each row as integer.
+#'  The values need to correspond with the possible dating ranges present in
+#'  the concordance used (see [make_chrongler_conc()]).
+#' @param min *chr/int*. Name or index of the column with the **minimum dating** (integers representing years).
+#' @param max *chr/int*. Name or index of the column with the **maximum dating** (integers representing years).
+#' @param previous_start *chr/int*, _optional_. Name or index of a pre-existing column
+#'  containing a *starting period**. If supplied, previously empty values (`NA`)
+#'  will be populated in the new *period.start* column. A comment is stored in a
+#'  column called *period.source*.
+#' @param previous_end *chr/int*, _optional_. Name or index of a pre-existing column
+#'  containing a **ending period**. If supplied, previously empty values (`NA`)
+#'  will be populated in the new *period.end* column. A comment is stored in a
+#'  column called *period.source*.
+#' @inheritParams group_periods
 #' @param by_group TRUE/FALSE
 #' @param paste_multiple TRUE/FALSE
 #'
 #'
-#' @inheritParams group_periods
 #'
 #' @seealso
 #'  * [make_chrongler_conc()]
 #'  * [derive_dating()]
 #'
-#' @return A data.frame, with period values in the `period.start` and
-#' `period.end` columns and a comment in `period.source` (see description).
+#' @return The input `data` as a `data.frame` with three additional columns:
+#'   * `period.start` -- character, the period the date in `min` would fall in
+#'    (or copied from `previous_start` where available)
+#'   * `period.end` -- character, the period the date in `max` would fall in
+#'    (or copied from `previous_end` where available)
+#'   * `dating.source` -- character, a comment indicating how the period was
+#'     derived (`"Derived from absolute dating"`, `"Partially derived from absolute dating"`,
+#'     or `NA` if no derivation was necessary)
 #'
 #' @export
 #'
 #' @examples
-#' filename <- system.file(package = "chrongler",
-#'                        "extdata/2023_periods_grouping_example.csv")
-#' conc <- make_chrongler_conc(filename)
+#' conc <- make_chrongler_conc(RomanPeriods)
 #'
 #' data <- data.frame(name = 1:110)
 #'
-#' data$dating.min <- sample(seq(-470, 1999, by = 1), 110, replace = TRUE)
-#' data$dating.max <- data$dating.min + sample(round(rnorm(1000, 30, 10)), 110, replace = TRUE)
+#' data$min <- sample(seq(-509, 476, by = 1), 110, replace = TRUE)
+#' data$max <- data$min + sample(abs(round(rnorm(1000, 200, 100))), 110, replace = TRUE)
 #'
-#' derive_period(data, conc,
-#'               dating.min = "dating.min",
-#'               dating.max = "dating.max",
-#'               by_group = FALSE, paste_multiple = FALSE)
+#' derive_period(data, conc, min = "min", max = "max")
 #'
 derive_period <- function(data, conc,
-                          dating.min, dating.max,
-                          start, end,
+                          min, max,
+                          previous_start, previous_end,
                           by_group = FALSE,
                           paste_multiple = TRUE) {
 
 
   stopifnot(inherits(conc, "chrongler.conc"))
 
-  dating.min <- colnames_to_index(colnames(data), dating.min)
-  dating.max <- colnames_to_index(colnames(data), dating.max)
+  min <- colnames_to_index(colnames = colnames(data), columns = min)
+  max <- colnames_to_index(colnames = colnames(data), columns = max)
 
-  start <- try(colnames_to_index(colnames(data),
-                                        start),
-                    silent = TRUE)
-  end <- try(colnames_to_index(colnames(data),
-                                      end),
-                    silent = TRUE)
 
-  if (length(start) == 0 | length(end) == 0) {
-    stop("Cannot identify start and end columns.")
+  if (missing(previous_start)) {
+    if ("period.start" %in% colnames(data)) {
+      message("Add column names with pre-existing dating as the 'previous_start' ",
+              "argument if you wish to only fill NA-values.")
+    }
+    previous_start <- rep(NA, nrow(data))
+  } else {
+    previous_start <- colnames_to_index(colnames = colnames(data),
+                                        columns = previous_start)
+    previous_start <- data[, previous_start]
   }
 
-  if (inherits(start, "try-error")) {
-    data$period.start <- NA
-    start <- colnames_to_index(colnames(data), "period.start")
-  }
-  if (inherits(end, "try-error")) {
-    data$period.end <- NA
-    end <- colnames_to_index(colnames(data), "period.end")
+  if (missing(previous_end)) {
+    if ("period.end" %in% colnames(data)) {
+      message("Add column names with pre-existing dating as the 'previous_end' ",
+              "argument if you wish to only fill NA-values.")
+    }
+    previous_end <- rep(NA, nrow(data))
+  } else {
+    previous_end <- colnames_to_index(colnames = colnames(data),
+                                      columns = previous_end)
+    previous_end <- data[, previous_end]
   }
 
   if (by_group == TRUE) {
     pos_dating <- conc$dating[which(names(conc$dating) %in% conc$group.order)]
-  } else if (by_group == FALSE) {
+  } else {
     pos_dating <- conc$dating[which(names(conc$dating) %in% conc$period.order)]
   }
 
@@ -95,9 +102,11 @@ derive_period <- function(data, conc,
   to_all <- lapply(pos_dating, function(y) y$to)
 
   new_periods <- data
-
+  new_periods[, "period.start"] <- NA
+  new_periods[, "period.end"] <- NA
+  i <- 1
   for (i in seq_len(nrow(new_periods))) {
-    match_from <- which(new_periods[i, dating.min] >= from_all & new_periods[i, dating.min] <= to_all)
+    match_from <- which(new_periods[i, min] >= from_all & new_periods[i, min] <= to_all)
     res_from <- names(from_all[match_from])
     if (length(res_from) > 1) {
       warning("Date matching multiple periods.")
@@ -109,9 +118,9 @@ derive_period <- function(data, conc,
     } else if (length(res_from) == 0) {
       res_from <- NA
     }
-    new_periods[i, start] <- res_from
+    new_periods[i, "period.start"] <- res_from
 
-    match_to <- which(new_periods[i, dating.max] >= from_all & new_periods[i, dating.max] <= to_all)
+    match_to <- which(new_periods[i, max] >= from_all & new_periods[i, max] <= to_all)
     res_to <- names(to_all[match_to])
     if (length(res_to) > 1) {
       warning("Date matching multiple periods.")
@@ -123,33 +132,35 @@ derive_period <- function(data, conc,
     } else if (length(res_to) == 0) {
       res_to <- NA
     }
-    new_periods[i, end] <- res_to
+    new_periods[i, "period.end"] <- res_to
   }
 
-  min_na <- which(is.na(data[, start]) & !is.na(data[, end]) & !is.na(new_periods[, start]))
-  max_na <- which(!is.na(data[, start]) & is.na(data[, end]) & !is.na(new_periods[, end]))
+  data[, "period.start"] <- previous_start
+  start_empty <- is.na(previous_start)
+  data[start_empty, "period.start"] <- new_periods[start_empty, "period.start"]
 
-  complete_na <- is.na(data[, start]) & is.na(data[, end])
+  data[, "period.end"] <- previous_end
+  end_empty <- is.na(previous_end)
+  data[end_empty, "period.end"] <- new_periods[end_empty, "period.end"]
 
-  replace <- which(complete_na & !is.na(new_periods[, start]))
-  data[c(replace, min_na), start] <- new_periods[c(replace, min_na), start]
-  data[c(replace, max_na), end] <- new_periods[c(replace, max_na), end]
-
-  # TODO factors.
-
-  if (length(as.character(data$period.source)) == 0) {
-    data$period.source <- NA
+  if (!"period.source" %in% colnames(data)) {
+    data[, "period.source"] <- NA
   }
-  data$period.source[replace] <- ifelse(
-    is.na(data$period.source[replace]),
-    "Derived from dating",
-    paste(data$period.source[replace], " - Derived from dating")
+  source_empty <- is.na(data[, "period.source"])
+
+  fully_derived <- start_empty & end_empty
+  partially_derived <- (start_empty | end_empty) & !fully_derived
+
+  data$period.source[fully_derived] <- ifelse(
+    source_empty[fully_derived],
+    "Derived from absolute dating",
+    paste(data$period.source[fully_derived], "- Derived from absolute dating")
   )
 
-  data$period.source[c(min_na, max_na)] <- ifelse(
-    is.na(data$period.source[c(min_na, max_na)]),
-    "Derived from dating",
-    paste(data$period.source[c(min_na, max_na)], " - Partially derived from dating")
+  data$period.source[partially_derived] <- ifelse(
+    source_empty[partially_derived],
+    "Partially derived from absolute dating",
+    paste(data$period.source[partially_derived], "- Partially derived from absolute dating")
   )
 
   return(data)

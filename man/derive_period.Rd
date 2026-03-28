@@ -7,72 +7,72 @@
 derive_period(
   data,
   conc,
-  dating.min,
-  dating.max,
-  start,
-  end,
+  min,
+  max,
+  previous_start,
+  previous_end,
   by_group = FALSE,
   paste_multiple = TRUE
 )
 }
 \arguments{
 \item{data}{A data.frame containing at least two columns with the
-start and end period for each row. Columns can be specified in the relevant
-arguments. The values in the start and end period need to correspond with
-the relevant values in the concordance used (see \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}).}
+minimum and maximum absolute dating for each row as integer.
+The values need to correspond with the possible dating ranges present in
+the concordance used (see \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}).}
 
 \item{conc}{A \code{chrongler.conc}-list built by \code{\link[=make_chrongler_conc]{make_chrongler_conc()}}.}
 
-\item{dating.min}{chr/int}
+\item{min}{\emph{chr/int}. Name or index of the column with the \strong{minimum dating} (integers representing years).}
 
-\item{dating.max}{chr/int}
+\item{max}{\emph{chr/int}. Name or index of the column with the \strong{maximum dating} (integers representing years).}
 
-\item{start}{\emph{chr/int}. Name or index of a pre-existing column
-containing the \strong{starting period}. If it does exist, this function will
-only fill cells that were previously empty. A comment is stored in a
-column called \emph{period.source}. If this argument is left empty and a
-\emph{period.start} column already exists, it will be overwritten.}
+\item{previous_start}{\emph{chr/int}, \emph{optional}. Name or index of a pre-existing column
+containing a \emph{starting period}*. If supplied, previously empty values (\code{NA})
+will be populated in the new \emph{period.start} column. A comment is stored in a
+column called \emph{period.source}.}
 
-\item{end}{\emph{chr/int}. Name or index of a pre-existing column
-containing the \strong{ending period}. If it does exist, this function will
-only fill cells that were previously empty. A comment is stored in a
-column called \emph{period.source}. If this argument is left empty and a
-\emph{period.end} column already exists, it will be overwritten.}
+\item{previous_end}{\emph{chr/int}, \emph{optional}. Name or index of a pre-existing column
+containing a \strong{ending period}. If supplied, previously empty values (\code{NA})
+will be populated in the new \emph{period.end} column. A comment is stored in a
+column called \emph{period.source}.}
 
 \item{by_group}{TRUE/FALSE}
 
 \item{paste_multiple}{TRUE/FALSE}
 }
 \value{
-A data.frame, with period values in the \code{period.start} and
-\code{period.end} columns and a comment in \code{period.source} (see description).
+The input \code{data} as a \code{data.frame} with three additional columns:
+\itemize{
+\item \code{period.start} -- character, the period the date in \code{min} would fall in
+(or copied from \code{previous_start} where available)
+\item \code{period.end} -- character, the period the date in \code{max} would fall in
+(or copied from \code{previous_end} where available)
+\item \code{dating.source} -- character, a comment indicating how the period was
+derived (\code{"Derived from absolute dating"}, \code{"Partially derived from absolute dating"},
+or \code{NA} if no derivation was necessary)
+}
 }
 \description{
-For each row in \code{data}, the value in the \code{dating.min} and \code{dating.max} column
-is used to identify the period(s) the respective row would be dated in
+For each row in \code{data}, the value in the \code{min} and \code{max} column
+is used to identify the period(s) the respective row would belong to
 according to the dating ranges registered in the the concordance
-object supplied to \code{conc} (\code{\link[=make_chrongler_conc]{make_chrongler_conc()}}). The periods are
-stored in the \code{period.start} and \code{period.end} columns, which have this
-name if the corresponding arguments are empty. If column names are
-supplied as arguments, the data in these columns will not be overwritten
-and instead only filled in if the respective cells are empty (NA).
+object supplied to \code{conc} (\code{\link[=make_chrongler_conc]{make_chrongler_conc()}}). The newly assigned
+periods are stored in column names \code{period.start} and \code{period.end}.
+If \code{previous_start} and/or \code{previous_end} are supplied, the values from those
+columns are preferred, and only empty (\code{NA}) cells are filled with derived periods.
 A comment informing of the procedure is written to a column called
 \emph{period.source}.
 }
 \examples{
-filename <- system.file(package = "chrongler",
-                       "extdata/2023_periods_grouping_example.csv")
-conc <- make_chrongler_conc(filename)
+conc <- make_chrongler_conc(RomanPeriods)
 
 data <- data.frame(name = 1:110)
 
-data$dating.min <- sample(seq(-470, 1999, by = 1), 110, replace = TRUE)
-data$dating.max <- data$dating.min + sample(round(rnorm(1000, 30, 10)), 110, replace = TRUE)
+data$min <- sample(seq(-509, 476, by = 1), 110, replace = TRUE)
+data$max <- data$min + sample(abs(round(rnorm(1000, 200, 100))), 110, replace = TRUE)
 
-derive_period(data, conc,
-              dating.min = "dating.min",
-              dating.max = "dating.max",
-              by_group = FALSE, paste_multiple = FALSE)
+derive_period(data, conc, min = "min", max = "max")
 
 }
 \seealso{
