@@ -2,7 +2,7 @@
 #'
 #' A subset of data from the Map of Miletus for testing and demonstrating
 #' working with the R-Package chrongler.
-#'
+#' @keywords datasets
 #' @format ## `BuildingsMilet`
 #' A data frame with 110 rows and 3 columns:
 #' \describe{
@@ -20,6 +20,7 @@
 #' Miletus Documentation Manual: Surveying, Forms, Find Processing and
 #' Database Usage, v.2.0, <https://doi.org/10.25592/uhhfdm.10029>
 #'
+#' @keywords datasets
 #' @format ## `PeriodsMilet`
 #' A data frame with 19 rows and 5 columns:
 #' \describe{
@@ -41,6 +42,7 @@
 #' \code{vignette("chrongler_workflow", package = "chrongler")}
 #'
 #'
+#' @keywords datasets
 #' @format ## `RomanPeriods`
 #' A data frame with 8 rows and 6 columns:
 #' \describe{
