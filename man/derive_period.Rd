@@ -4,15 +4,7 @@
 \alias{derive_period}
 \title{Derive Period from Absolute Dates}
 \usage{
-derive_period(
-  data,
-  conc,
-  min,
-  max,
-  previous_start,
-  previous_end,
-  paste_multiple = TRUE
-)
+derive_period(data, conc, min, max, previous_start, previous_end)
 }
 \arguments{
 \item{data}{A data.frame containing at least two columns with the
@@ -27,7 +19,7 @@ the concordance used (see \code{\link[=make_chrongler_conc]{make_chrongler_conc(
 \item{max}{\emph{chr/int}. Name or index of the column with the \strong{maximum dating} (integers representing years).}
 
 \item{previous_start}{\emph{chr/int}, \emph{optional}. Name or index of a pre-existing column
-containing a \emph{starting period}*. If supplied, previously empty values (\code{NA})
+containing a \strong{starting period}. If supplied, previously empty values (\code{NA})
 will be populated in the new \emph{period.start} column. A comment is stored in a
 column called \emph{period.source}.}
 
@@ -35,8 +27,6 @@ column called \emph{period.source}.}
 containing a \strong{ending period}. If supplied, previously empty values (\code{NA})
 will be populated in the new \emph{period.end} column. A comment is stored in a
 column called \emph{period.source}.}
-
-\item{paste_multiple}{TRUE/FALSE}
 }
 \value{
 The input \code{data} as a \code{data.frame} with three additional columns:
@@ -45,7 +35,7 @@ The input \code{data} as a \code{data.frame} with three additional columns:
 (or copied from \code{previous_start} where available)
 \item \code{period.end} -- character, the period the date in \code{max} would fall in
 (or copied from \code{previous_end} where available)
-\item \code{dating.source} -- character, a comment indicating how the period was
+\item \code{period.source} -- character, a comment indicating how the period was
 derived (\code{"Derived from absolute dating"}, \code{"Partially derived from absolute dating"},
 or \code{NA} if no derivation was necessary)
 }

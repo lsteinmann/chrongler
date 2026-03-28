@@ -65,8 +65,12 @@ missing_periods <- function(present_periods, possible_periods) {
 #' na_if_empty(list())
 #' na_if_empty(character(0))
 #' na_if_empty(NULL)
+#' na_if_empty("")
 na_if_empty <- function(x) {
   if (is.null(x)) return(NA)
   if (length(x) == 0) return(NA)
+  if (is.vector(x) && length(x) == 1) {
+    if (x == "") return(NA)
+  }
   return(x)
 }

@@ -17,7 +17,7 @@
 #' @param min *chr/int*. Name or index of the column with the **minimum dating** (integers representing years).
 #' @param max *chr/int*. Name or index of the column with the **maximum dating** (integers representing years).
 #' @param previous_start *chr/int*, _optional_. Name or index of a pre-existing column
-#'  containing a *starting period**. If supplied, previously empty values (`NA`)
+#'  containing a **starting period**. If supplied, previously empty values (`NA`)
 #'  will be populated in the new *period.start* column. A comment is stored in a
 #'  column called *period.source*.
 #' @param previous_end *chr/int*, _optional_. Name or index of a pre-existing column
@@ -25,8 +25,6 @@
 #'  will be populated in the new *period.end* column. A comment is stored in a
 #'  column called *period.source*.
 #' @inheritParams group_periods
-#' @param paste_multiple TRUE/FALSE
-#'
 #'
 #'
 #' @seealso
@@ -38,7 +36,7 @@
 #'    (or copied from `previous_start` where available)
 #'   * `period.end` -- character, the period the date in `max` would fall in
 #'    (or copied from `previous_end` where available)
-#'   * `dating.source` -- character, a comment indicating how the period was
+#'   * `period.source` -- character, a comment indicating how the period was
 #'     derived (`"Derived from absolute dating"`, `"Partially derived from absolute dating"`,
 #'     or `NA` if no derivation was necessary)
 #'
@@ -56,8 +54,7 @@
 #'
 derive_period <- function(data, conc,
                           min, max,
-                          previous_start, previous_end,
-                          paste_multiple = TRUE) {
+                          previous_start, previous_end) {
 
 
   stopifnot(inherits(conc, "chrongler.conc"))
@@ -94,47 +91,50 @@ derive_period <- function(data, conc,
   from_all <- lapply(pos_dating, function(y) y$from)
   to_all <- lapply(pos_dating, function(y) y$to)
 
-  new_periods <- data
-  new_periods[, "period.start"] <- NA
-  new_periods[, "period.end"] <- NA
+  new_periods.start <- sapply(data[, min], function(min_date) {
+    match_from <- which(min_date >= from_all & min_date <= to_all)
+    res <- names(match_from)
+    res <- list(
+      value = na_if_empty(paste0(res, collapse = ";")),
+      multiple = length(res) > 1
+    )
+    return(res)
+  })
 
-  for (i in seq_len(nrow(new_periods))) {
-    match_from <- which(new_periods[i, min] >= from_all & new_periods[i, min] <= to_all)
-    res_from <- names(from_all[match_from])
-    if (length(res_from) > 1) {
-      warning("Date matching multiple periods.")
-      if (paste_multiple == TRUE) {
-        res_from <- paste(res_from, collapse = ";")
-      } else {
-        res_from <- res_from[1]
-      }
-    } else if (length(res_from) == 0) {
-      res_from <- NA
-    }
-    new_periods[i, "period.start"] <- res_from
+  new_periods.end <- sapply(data[, max], function(max_date) {
+    match_to <- which(max_date >= from_all & max_date <= to_all)
+    res <- names(match_to)
+    res <- list(
+      value = na_if_empty(paste0(res, collapse = ";")),
+      multiple = length(res) > 1
+    )
+    return(res)
+  })
+  new_periods.start_values <- unlist(new_periods.start["value", ])
+  new_periods.start_multiple <- unlist(new_periods.start["multiple", ])
 
-    match_to <- which(new_periods[i, max] >= from_all & new_periods[i, max] <= to_all)
-    res_to <- names(to_all[match_to])
-    if (length(res_to) > 1) {
-      warning("Date matching multiple periods.")
-      if (paste_multiple == TRUE) {
-        res_to <- paste(res_to, collapse = ";")
-      } else {
-        res_to <- res_to[1]
-      }
-    } else if (length(res_to) == 0) {
-      res_to <- NA
-    }
-    new_periods[i, "period.end"] <- res_to
-  }
+  new_periods.end_values <- unlist(new_periods.end["value", ])
+  new_periods.end_multiple <- unlist(new_periods.end["multiple", ])
+
 
   data[, "period.start"] <- previous_start
   start_empty <- is.na(previous_start)
-  data[start_empty, "period.start"] <- new_periods[start_empty, "period.start"]
+  data[start_empty, "period.start"] <- new_periods.start_values[start_empty]
 
   data[, "period.end"] <- previous_end
   end_empty <- is.na(previous_end)
-  data[end_empty, "period.end"] <- new_periods[end_empty, "period.end"]
+  data[end_empty, "period.end"] <- new_periods.end_values[end_empty]
+
+  if (any(new_periods.start_multiple)) {
+    warning("Found multiple periods fitting the minimum dating at index ",
+            paste(which(new_periods.start_multiple), collapse = ", "),
+            ". Values in `period.start` may not fit the concordance.")
+  }
+  if (any(new_periods.end_multiple)) {
+    warning("Found multiple periods fitting the maximum dating at index ",
+            paste(which(new_periods.end_multiple), collapse = ", "),
+            ". Values in `period.end` may not fit the concordance.")
+  }
 
   if (!"period.source" %in% colnames(data)) {
     data[, "period.source"] <- NA
