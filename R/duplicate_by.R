@@ -34,12 +34,8 @@ duplicate_by <- function(data, conc, start, end, by_group = TRUE) {
 
   stopifnot(inherits(conc, "chrongler.conc"))
 
-  start <- colnames_to_index(colnames(data), start)
-  end <- colnames_to_index(colnames(data), end)
-
-  if (length(start) == 0 | length(end) == 0) {
-    stop("Cannot identify start and end columns.")
-  }
+  start <- colnames_to_index(colnames = colnames(data), columns = start)
+  end <- colnames_to_index(colnames = colnames(data), columns = end)
 
   if (by_group == TRUE) {
     data <- group_periods(data, conc, start, end)
