@@ -19,21 +19,23 @@ the relevant values in the concordance used (see \code{\link[=make_chrongler_con
 \item{end}{\emph{chr/int}, \emph{required}. Name or index of the column with the \strong{latest period}.}
 }
 \value{
-A data.frame, with the values replaced in the columns from
-the \code{start} and \code{end}-arguments (see description).
+The input \code{data} as a \code{data.frame}, with additional columns:
+\itemize{
+\item \code{start.ungr} -- \emph{ordered factor} of the earliest individual period in the group from the start column.
+\item \code{end.ungr} -- \emph{ordered factor} of the latest individual period in the group from the end column.
+}
 }
 \description{
 For each row in \code{data}, if the value in the \code{start} and \code{end} column
 is listed as a \emph{group} in the concordance object supplied to
 \code{conc} (\code{\link[=make_chrongler_conc]{make_chrongler_conc()}}), it is replaced with the name of the
-first respective \emph{period} in that \emph{group} as noted in said concordance.
+first or last respective \emph{period} in that \emph{group} as noted in said concordance.
 Values that are already listed as \emph{period}s are not changed.
 }
 \examples{
 data("BuildingsMilet")
-filename <- system.file(package = "chrongler",
-                       "extdata/2023_periods_grouping_example.csv")
-conc <- make_chrongler_conc(filename)
+data("PeriodsMilet")
+conc <- make_chrongler_conc(PeriodsMilet)
 ungroup_periods(
   BuildingsMilet,
   conc,
@@ -42,5 +44,7 @@ ungroup_periods(
  )
 }
 \seealso{
-\code{\link[=make_chrongler_conc]{make_chrongler_conc()}}
+\itemize{
+\item \code{\link[=group_periods]{group_periods()}}
+}
 }

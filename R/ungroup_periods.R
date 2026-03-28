@@ -3,24 +3,25 @@
 #' For each row in `data`, if the value in the `start` and `end` column
 #' is listed as a *group* in the concordance object supplied to
 #' `conc` ([make_chrongler_conc()]), it is replaced with the name of the
-#' first respective *period* in that *group* as noted in said concordance.
+#' first or last respective *period* in that *group* as noted in said concordance.
 #' Values that are already listed as *period*s are not changed.
 #'
 #' @inheritParams group_periods
 #'
 #'
-#' @seealso [make_chrongler_conc()]
+#' @seealso
+#'  * [group_periods()]
 #'
-#' @return A data.frame, with the values replaced in the columns from
-#' the `start` and `end`-arguments (see description).
+#' @return The input `data` as a `data.frame`, with additional columns:
+#'   * `start.ungr` -- *ordered factor* of the earliest individual period in the group from the start column.
+#'   * `end.ungr` -- *ordered factor* of the latest individual period in the group from the end column.
 #'
 #' @export
 #'
 #' @examples
 #' data("BuildingsMilet")
-#' filename <- system.file(package = "chrongler",
-#'                        "extdata/2023_periods_grouping_example.csv")
-#' conc <- make_chrongler_conc(filename)
+#' data("PeriodsMilet")
+#' conc <- make_chrongler_conc(PeriodsMilet)
 #' ungroup_periods(
 #'   BuildingsMilet,
 #'   conc,
@@ -31,8 +32,8 @@ ungroup_periods <- function(data, conc, start, end) {
 
   stopifnot(inherits(conc, "chrongler.conc"))
 
-  start <- colnames_to_index(colnames(data), start)
-  end <- colnames_to_index(colnames(data), end)
+  start <- colnames_to_index(colnames = colnames(data), columns = start)
+  end <- colnames_to_index(colnames = colnames(data), columns = end)
 
   res_start <- as.character(data[, start])
   matches <- match(res_start, conc$group.order)
@@ -60,9 +61,9 @@ ungroup_periods <- function(data, conc, start, end) {
   })
 
   start.ungr <- ordered(res_start, levels = conc$period.order)
-  data <- cbind(data, start.ungr)
+  data[, "start.ungr"] <- start.ungr
   end.ungr <- ordered(res_end, levels = conc$period.order)
-  data <- cbind(data, end.ungr)
+  data[, "end.ungr"] <- end.ungr
 
   return(data)
 }
