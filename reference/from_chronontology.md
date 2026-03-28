@@ -1,7 +1,6 @@
-# (Removed) Get Data for One Period from iDAI.chronontology This function has been removed from chrongler.
+# (Removed) Get Data for One Period from iDAI.chronontology
 
-(Removed) Get Data for One Period from iDAI.chronontology This function
-has been removed from chrongler.
+This function has been removed from chrongler.
 
 ## Usage
 

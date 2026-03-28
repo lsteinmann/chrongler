@@ -6,9 +6,9 @@ associated row is duplicated as many times as possible periods the
 objects might be placed in according to the concordance supplied to
 `conc`
 ([`make_chrongler_conc()`](https://lsteinmann.github.io/chrongler/reference/make_chrongler_conc.md)).
-This way, each objects is represented by multiple rows in the result! A
+This way, each object is represented by multiple rows in the result! A
 `fraction` column tracks the resulting *fraction* or weight each row
-represents in regards to the object.
+represents with regard to the object.
 
 ## Usage
 

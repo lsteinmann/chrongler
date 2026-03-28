@@ -1,7 +1,6 @@
-# (Removed) Basic Query for iDAI.chronontology This function has been removed from chrongler.
+# (Removed) Basic Query for iDAI.chronontology
 
-(Removed) Basic Query for iDAI.chronontology This function has been
-removed from chrongler.
+This function has been removed from chrongler.
 
 ## Usage
 

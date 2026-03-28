@@ -21,8 +21,7 @@
   : Duplicate each Row for each Period in the Range from start to end
 
 - [`from_chronontology()`](https://lsteinmann.github.io/chrongler/reference/from_chronontology.md)
-  : (Removed) Get Data for One Period from iDAI.chronontology This
-  function has been removed from chrongler.
+  : (Removed) Get Data for One Period from iDAI.chronontology
 
 - [`group_periods()`](https://lsteinmann.github.io/chrongler/reference/group_periods.md)
   : Replaces Periods with their Associated Grouped Versions
@@ -33,8 +32,7 @@
   Produce a Concordance for Wrangling Categorical Data with `chrongler`
 
 - [`query_chronontology()`](https://lsteinmann.github.io/chrongler/reference/query_chronontology.md)
-  : (Removed) Basic Query for iDAI.chronontology This function has been
-  removed from chrongler.
+  : (Removed) Basic Query for iDAI.chronontology
 
 - [`ungroup_periods()`](https://lsteinmann.github.io/chrongler/reference/ungroup_periods.md)
   : Replaces Period-"groups" with their Associated Periods
