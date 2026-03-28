@@ -2,7 +2,7 @@
 title: "chrongler wrangles categorical chronological data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{example_workflow}
+  %\VignetteIndexEntry{chrongler wrangles categorical chronological data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -175,7 +175,7 @@ knitr::kable(data_rd)
 And automatically add the period range: 
 
 ```{r}
-data_rd_pr <- derive_period(data_rd, conc, dating.min = "dating.min", dating.max = "dating.max")
+data_rd_pr <- derive_period(data_rd, conc, min = "dating.min", max = "dating.max")
 ```
 ```{r echo = FALSE}
 knitr::kable(data_rd_pr)
@@ -183,9 +183,9 @@ knitr::kable(data_rd_pr)
 
 # Duplicating Objects by Period
 
-(Work in progress: This should soon also attach the fraction of the object each duplicated row represents, e.g. 0.5 if an object now falls into two periods.)
+In some cases - especially when working with period ranges, one would like to have a row for each dating 'instance' of an object. The `duplicate_by()` function does this conveniently for you. Each row (= object) will be duplicated by the number of periods or groups it can be dated to. A `fraction` column is added that equals to 1 divided by the number of periods the object can be dated to.
 
-In some cases - especially when working with period ranges, one would like to have a row for each dating 'instance' of an object. You can either to this by group or by period:
+You can either do this by group or by period:
 
 ```{r}
 gr_dupl <- duplicate_by(data_rd_pr, conc, start = "period.start", end = "period.end", by_group = TRUE)
