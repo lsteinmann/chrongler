@@ -4,7 +4,7 @@
 \alias{duplicate_by}
 \title{Duplicate each Row for each Period in the Range from start to end}
 \usage{
-duplicate_by(data, conc, start, end, by_group = TRUE)
+duplicate_by(data, conc, start, end, by_group)
 }
 \arguments{
 \item{data}{A data.frame containing at least two columns with the
@@ -18,29 +18,33 @@ the relevant values in the concordance used (see \code{\link[=make_chrongler_con
 
 \item{end}{\emph{chr/int}. Name or index of the column with the \strong{latest period}.}
 
-\item{by_group}{\emph{TRUE/FALSE}. Default is TRUE. If TRUE all rows are
-duplicated according to their grouped periods (see \code{\link[=group_periods]{group_periods()}}). If
-FALSE all rows are duplicated according to their single
-periods (see \code{\link[=ungroup_periods]{ungroup_periods()}}).}
+\item{by_group}{\emph{TRUE/FALSE}, \emph{required}. Should the rows be duplicated along period
+groups? If \code{TRUE}: all rows are duplicated according to their grouped
+periods (see \code{\link[=group_periods]{group_periods()}}). If \code{FALSE}: all rows are duplicated
+according to their single periods (see \code{\link[=ungroup_periods]{ungroup_periods()}}).}
 }
 \value{
-A data.frame, with a row for each period in which each row from the
-previous data would fall (see description).
+The input \code{data} as a \code{data.frame}, with duplicated rows and additional columns:
+\itemize{
+\item \code{period} -- \emph{ordered factor} of the period represented by this row.
+\item \code{fraction} -- \emph{numeric} value of 1 divided by the number of periods an
+object can belong to: the fraction of each object the row can represent.
+\item Additional columns produced by \code{\link[=group_periods]{group_periods()}} or \code{\link[=ungroup_periods]{ungroup_periods()}}
+}
 }
 \description{
 For each period one object may be placed in according to the range
 provided by the \code{start} and \code{end} columns of the data.frame \code{data}, the
 associated row is duplicated as many times as possible periods the objects
-might be placed in according to the concordance object supplied to
+might be placed in according to the concordance supplied to
 \code{conc} (\code{\link[=make_chrongler_conc]{make_chrongler_conc()}}). This way, each objects is
-represented by multiple rows in the result!
+represented by multiple rows in the result! A \code{fraction} column tracks
+the resulting \emph{fraction} or weight each row represents in regards to the object.
 }
 \examples{
 data("BuildingsMilet")
-
-filename <- system.file(package = "chrongler",
-                       "extdata/2023_periods_grouping_example.csv")
-conc <- make_chrongler_conc(filename)
+data("PeriodsMilet")
+conc <- make_chrongler_conc(PeriodsMilet)
 
 duplicate_by(BuildingsMilet, conc,
              start = "period.start", end = "period.end",
