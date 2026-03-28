@@ -23,8 +23,12 @@ test_that("fails if conc is not a chrongler.conc", {
   )
 })
 
+
+# Base data for following tests
 data("RomanPeriods")
 roman_conc <- make_chrongler_conc(RomanPeriods)
+
+## Tests
 
 test_that("fails if column does not exist", {
   data <- data.frame(

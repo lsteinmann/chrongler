@@ -37,9 +37,9 @@ For each period one object may be placed in according to the range
 provided by the \code{start} and \code{end} columns of the data.frame \code{data}, the
 associated row is duplicated as many times as possible periods the objects
 might be placed in according to the concordance supplied to
-\code{conc} (\code{\link[=make_chrongler_conc]{make_chrongler_conc()}}). This way, each objects is
+\code{conc} (\code{\link[=make_chrongler_conc]{make_chrongler_conc()}}). This way, each object is
 represented by multiple rows in the result! A \code{fraction} column tracks
-the resulting \emph{fraction} or weight each row represents in regards to the object.
+the resulting \emph{fraction} or weight each row represents with regard to the object.
 }
 \examples{
 data("BuildingsMilet")

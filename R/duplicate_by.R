@@ -4,9 +4,9 @@
 #' provided by the `start` and `end` columns of the data.frame `data`, the
 #' associated row is duplicated as many times as possible periods the objects
 #' might be placed in according to the concordance supplied to
-#' `conc` ([make_chrongler_conc()]). This way, each objects is
+#' `conc` ([make_chrongler_conc()]). This way, each object is
 #' represented by multiple rows in the result! A `fraction` column tracks
-#' the resulting *fraction* or weight each row represents in regards to the object.
+#' the resulting *fraction* or weight each row represents with regard to the object.
 #'
 #'
 #' @inheritParams group_periods

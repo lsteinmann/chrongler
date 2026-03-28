@@ -9,7 +9,7 @@ Author: Lisa Steinmann
 Maintainer: Lisa Steinmann <lisa.steinmann@rub.de>
 Description: Dealing with archaeological or historical chronological data 
     can be time consuming. chrongler provides convenience functions that 
-    help reformat or 'wrangle' data were chronological
+    help reformat or 'wrangle' data where chronological
     information is stored as a 'period' (categorical values that may
     indicate chronology in one way or another). 
 License: GPL (>= 3)

@@ -2,8 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{query_chronontology}
 \alias{query_chronontology}
-\title{(Removed) Basic Query for iDAI.chronontology
-This function has been removed from chrongler.}
+\title{(Removed) Basic Query for iDAI.chronontology}
 \usage{
 query_chronontology(value = "roman")
 }
@@ -14,6 +13,5 @@ query_chronontology(value = "roman")
 Nothing.
 }
 \description{
-(Removed) Basic Query for iDAI.chronontology
 This function has been removed from chrongler.
 }

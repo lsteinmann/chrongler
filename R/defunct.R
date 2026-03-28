@@ -1,4 +1,5 @@
 #' (Removed) Get Data for One Period from iDAI.chronontology
+#'
 #' This function has been removed from chrongler.
 #'
 #' @param id (chr)
@@ -9,6 +10,7 @@ from_chronontology <- function(id = "") {
            package = "chrongler")
 }
 #' (Removed) Basic Query for iDAI.chronontology
+#'
 #' This function has been removed from chrongler.
 #'
 #' @param value (chr)

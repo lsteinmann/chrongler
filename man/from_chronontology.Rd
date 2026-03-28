@@ -2,8 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{from_chronontology}
 \alias{from_chronontology}
-\title{(Removed) Get Data for One Period from iDAI.chronontology
-This function has been removed from chrongler.}
+\title{(Removed) Get Data for One Period from iDAI.chronontology}
 \usage{
 from_chronontology(id = "")
 }
@@ -14,6 +13,5 @@ from_chronontology(id = "")
 Nothing.
 }
 \description{
-(Removed) Get Data for One Period from iDAI.chronontology
 This function has been removed from chrongler.
 }
